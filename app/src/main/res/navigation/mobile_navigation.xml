@@ -41,4 +41,14 @@
             android:id="@+id/action_loginFragment_to_nav_home"
             app:destination="@id/nav_home" />
     </fragment>
+    <fragment
+        android:id="@+id/nav_cliente"
+        android:name="com.example.farmtech_mobile.ClienteFragment"
+        android:label="fragment_cliente"
+        tools:layout="@layout/fragment_cliente" />
+    <fragment
+        android:id="@+id/clienteNovoFragment"
+        android:name="com.example.farmtech_mobile.ClienteNovoFragment"
+        android:label="fragment_cliente_novo"
+        tools:layout="@layout/fragment_cliente_novo" />
 </navigation>
