@@ -1,4 +1,4 @@
-package com.example.farmtech_mobile;
+package com.example.farmtech_mobile.ui.clienteNovo;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,13 +9,20 @@ import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-class ClienteNovoFragment extends Fragment {
+import com.example.farmtech_mobile.R;
 
+public class ClienteNovoFragment extends Fragment {
+
+    public ClienteNovoFragment() {
+        // É necessário que o construtor padrão esteja presente
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+
         return inflater.inflate(R.layout.fragment_cliente_novo, container, false);
     }
 }

@@ -1,13 +1,358 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ClienteNovoFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layoutMode="clipBounds"
+            android:orientation="vertical"
+            android:paddingLeft="10sp"
+            android:paddingTop="20sp"
+            android:paddingBottom="0sp"
+            android:showDividers="middle">
+
+
+            <TextView
+                android:id="@+id/lblNome"
+                android:layout_width="367dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0sp"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="10sp"
+                android:text="Nome"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/txtNome"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.033"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/txtNome"
+                android:layout_width="367dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0sp"
+                android:layout_marginTop="0sp"
+                android:layout_marginBottom="10sp"
+                android:ems="10"
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.428"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/lblEmail"
+                android:layout_width="367dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0sp"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="10sp"
+                android:text="Email"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/txtEmail"
+                app:layout_constraintTop_toBottomOf="@+id/txtNome"
+                app:layout_constraintVertical_bias="1.0"
+                tools:layout_editor_absoluteX="12dp" />
+
+            <EditText
+                android:id="@+id/txtEmail"
+                android:layout_width="367dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="0sp"
+                android:layout_marginTop="0sp"
+                android:layout_marginBottom="10sp"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.392"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtNome" />
+
+            <TextView
+                android:id="@+id/lblTelefone"
+                android:layout_width="367dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="0sp"
+                android:layout_marginLeft="0sp"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="10sp"
+                android:text="Telefone"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/txtTelefone"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/txtTelefone"
+                android:layout_width="367dp"
+                android:layout_height="41dp"
+                android:layout_marginLeft="0sp"
+                android:layout_marginTop="0sp"
+                android:layout_marginBottom="10sp"
+                android:ems="10"
+                android:inputType="phone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.344"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtEmail" />
+
+            <TextView
+                android:id="@+id/lblCpf"
+                android:layout_width="367dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0sp"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="10sp"
+                android:text="CPF"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/txtCpf"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/txtCpf"
+                android:layout_width="367dp"
+                android:layout_height="39dp"
+                android:layout_marginLeft="0sp"
+                android:layout_marginTop="0sp"
+                android:layout_marginBottom="10sp"
+                android:ems="10"
+                android:inputType="numberSigned"
+                app:layout_constraintTop_toBottomOf="@+id/txtTelefone"
+                tools:layout_editor_absoluteX="12dp" />
+
+            <TextView
+                android:id="@+id/lblDtNasc"
+                android:layout_width="367dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0sp"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="10sp"
+                android:text="Data de nascimento"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="367dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="0sp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/lblDia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0sp"
+                    android:layout_weight="1"
+                    android:text="  Dia"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/lblMes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0sp"
+                    android:layout_weight="1"
+                    android:text="   Mês"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/lblAno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0sp"
+                    android:layout_weight="1"
+                    android:text="   Ano"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="367dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/slcDia"
+                    android:layout_width="match_parent"
+                    android:layout_height="40sp"
+                    android:layout_weight="1" />
+
+                <Spinner
+                    android:id="@+id/slcMes"
+                    android:layout_width="match_parent"
+                    android:layout_height="40sp"
+                    android:layout_weight="1" />
+
+                <Spinner
+                    android:id="@+id/slcAno"
+                    android:layout_width="match_parent"
+                    android:layout_height="40sp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/lblGenero"
+                android:layout_width="367dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0sp"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="10sp"
+                android:text="Genero"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/slcGenero"
+                tools:layout_editor_absoluteX="11dp" />
+
+            <Spinner
+                android:id="@+id/slcGenero"
+                android:layout_width="367dp"
+                android:layout_height="46dp"
+                android:layout_marginLeft="0sp"
+                android:layout_marginTop="0sp"
+                android:layout_marginBottom="10sp"
+                android:spinnerMode="dropdown"
+                app:layout_constraintTop_toBottomOf="@+id/dtDataNasc"
+                tools:layout_editor_absoluteX="12dp" />
+
+            <TextView
+                android:id="@+id/lblRua"
+                android:layout_width="367dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0sp"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="10sp"
+                android:text="Rua"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/txtRua"
+                tools:layout_editor_absoluteX="12dp" />
+
+            <EditText
+                android:id="@+id/txtRua"
+                android:layout_width="367dp"
+                android:layout_height="41dp"
+                android:layout_marginLeft="0sp"
+                android:layout_marginTop="0sp"
+                android:layout_marginBottom="10sp"
+                android:ems="10"
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.333"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/slcGenero" />
+
+            <TextView
+                android:id="@+id/lblBairro"
+                android:layout_width="367dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0sp"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="10sp"
+                android:text="Bairro"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/txtBairro"
+                tools:layout_editor_absoluteX="11dp" />
+
+            <EditText
+                android:id="@+id/txtBairro"
+                android:layout_width="367dp"
+                android:layout_height="44dp"
+                android:layout_marginLeft="0sp"
+                android:layout_marginTop="0sp"
+                android:layout_marginBottom="10sp"
+                android:ems="10"
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.379"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtRua" />
+
+            <TextView
+                android:id="@+id/lblCidade"
+                android:layout_width="367dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="10sp"
+                android:text="Cidade"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/txtCidade"
+                android:layout_width="367dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10sp"
+                android:ems="10"
+                android:inputType="text" />
+
+            <TextView
+                android:id="@+id/lblEstado"
+                android:layout_width="367dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="10sp"
+                android:text="Estado"
+                android:textSize="20sp" />
+
+            <Spinner
+                android:id="@+id/slcEstado"
+                android:layout_width="367dp"
+                android:layout_height="46sp"
+                android:layout_marginBottom="10sp" />
+
+            <TextView
+                android:id="@+id/lblCep"
+                android:layout_width="367dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="10sp"
+                android:text="CEP"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/txtCep"
+                android:layout_width="367dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10sp"
+                android:ems="10"
+                android:inputType="text" />
+
+            <LinearLayout
+                android:layout_width="367sp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30sp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnConfirma"
+                    android:layout_width="102dp"
+                    android:layout_height="80sp"
+                    android:layout_marginRight="20sp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#66DC62"
+                    android:insetTop="6dp"
+                    android:insetBottom="6dp"
+                    app:icon="@mipmap/ic_confirma_foreground"
+                    app:iconPadding="0sp"
+                    app:iconTint="#000000" />
+
+                <Button
+                    android:id="@+id/btnCancela"
+                    android:layout_width="102dp"
+                    android:layout_height="80sp"
+                    android:layout_marginLeft="80sp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#E95F5F"
+                    app:icon="@mipmap/ic_cancelar_foreground"
+                    app:iconPadding="0sp"
+                    app:iconTint="#000000" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </androidx.core.widget.NestedScrollView>
