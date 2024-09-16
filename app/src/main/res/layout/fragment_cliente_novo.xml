@@ -89,7 +89,8 @@
                 android:text="Telefone"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toTopOf="@+id/txtTelefone"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                />
 
             <EditText
                 android:id="@+id/txtTelefone"
@@ -100,6 +101,7 @@
                 android:layout_marginBottom="10sp"
                 android:ems="10"
                 android:inputType="phone"
+                android:maxLength="11"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.344"
                 app:layout_constraintStart_toStartOf="parent"
@@ -128,7 +130,9 @@
                 android:ems="10"
                 android:inputType="numberSigned"
                 app:layout_constraintTop_toBottomOf="@+id/txtTelefone"
-                tools:layout_editor_absoluteX="12dp" />
+                tools:layout_editor_absoluteX="12dp"
+                android:maxLength="11"
+                />
 
             <TextView
                 android:id="@+id/lblDtNasc"
@@ -184,19 +188,22 @@
                     android:id="@+id/slcDia"
                     android:layout_width="match_parent"
                     android:layout_height="40sp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:entries="@array/dias_spinner"/>
 
                 <Spinner
                     android:id="@+id/slcMes"
                     android:layout_width="match_parent"
                     android:layout_height="40sp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:entries="@array/meses_spinner"/>
 
                 <Spinner
                     android:id="@+id/slcAno"
                     android:layout_width="match_parent"
                     android:layout_height="40sp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:entries="@array/anos_spinner" />
             </LinearLayout>
 
             <TextView
@@ -220,7 +227,8 @@
                 android:layout_marginBottom="10sp"
                 android:spinnerMode="dropdown"
                 app:layout_constraintTop_toBottomOf="@+id/dtDataNasc"
-                tools:layout_editor_absoluteX="12dp" />
+                tools:layout_editor_absoluteX="12dp"
+                android:entries="@array/genero_spinner"/>
 
             <TextView
                 android:id="@+id/lblRua"
@@ -304,7 +312,8 @@
                 android:id="@+id/slcEstado"
                 android:layout_width="367dp"
                 android:layout_height="46sp"
-                android:layout_marginBottom="10sp" />
+                android:layout_marginBottom="10sp"
+                android:entries="@array/estados_spinner"/>
 
             <TextView
                 android:id="@+id/lblCep"
@@ -321,7 +330,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10sp"
                 android:ems="10"
-                android:inputType="text" />
+                android:inputType="number"
+                android:maxLength="8"/>
 
             <LinearLayout
                 android:layout_width="367sp"
