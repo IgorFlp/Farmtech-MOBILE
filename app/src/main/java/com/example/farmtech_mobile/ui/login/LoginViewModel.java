@@ -1,15 +1,32 @@
 package com.example.farmtech_mobile.ui.login;
 
+import static java.security.AccessController.getContext;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 
+import com.example.farmtech_mobile.api.RetrofitClient;
 import com.example.farmtech_mobile.data.LoginRepository;
 import com.example.farmtech_mobile.data.Result;
+import com.example.farmtech_mobile.data.model.ClienteEndereco;
 import com.example.farmtech_mobile.data.model.LoggedInUser;
 import com.example.farmtech_mobile.R;
+import com.example.farmtech_mobile.data.model.Usuario;
+import com.example.farmtech_mobile.api.ApiService;
+import com.google.gson.Gson;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginViewModel extends ViewModel {
 
@@ -29,16 +46,38 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
+
     public void login(String username, String password) {
         // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
+        //Result<LoggedInUser> result = loginRepository.login(username, password);
+        ApiService apiService = RetrofitClient.getApiService();
+        Usuario usuario = new Usuario(0,username,password,null,null);
+        Call<Usuario> call = apiService.logar(username,password);
+        call.enqueue(new Callback<Usuario>() {
+            @Override
+            public void onResponse(Call<Usuario> call, Response<Usuario> response) {
+                if (response.isSuccessful()) {
+                    Log.d("LoginFragment", "Login efetuado com sucesso: " + response.body());
+                    Usuario usuario = response.body();
+                    LoggedInUser  loggedInUser = new LoggedInUser(usuario.getUsuario(), usuario.getNome());
 
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-        }
+                    Result result = new Result.Success(usuario);
+                    if (result instanceof Result.Success) {
+                        loginResult.setValue(new LoginResult(new LoggedInUserView(loggedInUser.getDisplayName())));
+                    }
+                } else {
+                    loginResult.setValue(new LoginResult(R.string.login_failed));
+                    Log.e("UsuarioFragment", "Falha no login do endereco: " + response.message());
+                }
+            }
+            @Override
+            public void onFailure(Call<Usuario> call, Throwable t) {
+                Log.e("UsuarioFragment", "Erro: " + t.getMessage());
+            }
+        });
+
+
+
     }
 
     public void loginDataChanged(String username, String password) {

@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import com.example.farmtech_mobile.databinding.FragmentLoginBinding;
 
 import com.example.farmtech_mobile.R;
+import com.google.gson.Gson;
 
 public class LoginFragment extends Fragment {
 
@@ -49,7 +52,7 @@ public class LoginFragment extends Fragment {
 
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
-        final Button loginButton = binding.login;
+        final Button loginButton = binding.btnEntrar;
         final ProgressBar loadingProgressBar = binding.loading;
 
         loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), new Observer<LoginFormState>() {
@@ -115,14 +118,41 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        /*loginButton.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
+
+                // Observa o resultado do login
+                loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), usuario -> {
+                    if (usuario != null) {
+                        // Login bem-sucedido, redirecionar para a tela de Home
+                        loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), loginResult -> {
+                            if (loginResult == null) {
+                                return;
+                            }
+
+                            if (loginResult.getError() != null) {
+                                // Exibe mensagem de erro
+                                Toast.makeText(getContext(), getString(loginResult.getError()), Toast.LENGTH_SHORT).show();
+                            }
+
+                            if (loginResult.getSuccess() != null) {
+                                // Sucesso no login, redirecionar para a tela de Home
+                                LoggedInUserView loggedInUser = loginResult.getSuccess();
+                                Toast.makeText(getContext(), "Bem-vindo " + loggedInUser.getDisplayName(), Toast.LENGTH_LONG).show();
+
+                                // Aqui você realiza a navegação para o fragmento Home
+                                NavController navController = Navigation.findNavController(view);
+                                navController.navigate(R.id.action_loginFragment_to_nav_home);
+                            }
+                        });
+                    }
+                });
             }
-        });*/
+        });
 
     }
 

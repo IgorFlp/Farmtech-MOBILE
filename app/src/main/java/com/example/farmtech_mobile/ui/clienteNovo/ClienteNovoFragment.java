@@ -156,12 +156,14 @@ public class ClienteNovoFragment extends Fragment {
                         cidade != null && !cidade.isEmpty() &&
                         estado != null && !estado.isEmpty() &&
                         cep != null && !cep.isEmpty();
+
                 Log.d("ClienteNovoFragment","B: "+b);
                 if(b == true){
                     Cliente cliente = new Cliente(nome,cpf,email,telefone,dataNasc,genero);
                     Gson gson = new Gson();
                     String json = gson.toJson(cliente);
                      Log.d("ClienteNovoFragment","Cliente: "+json);
+
                     Call<Cliente> call = apiService.criarCliente(cliente);
                     call.enqueue(new Callback<Cliente>() {
                         @Override

@@ -10,15 +10,16 @@ namespace MinhaApi.Models
         }
 
         public DbSet<Cliente> Clientes { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<ClienteEndereco> ClientesEnderecos { get; set; }
         //public DbSet<ClienteEndereco> ClientesEnderecos { get; set; }
         // Adicione outras DbSets aqui
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Configurar o nome da tabela para a classe Cliente
-            modelBuilder.Entity<Cliente>()
-                .ToTable("Tb_cliente"); // Nome da tabela no banco de dados
-                modelBuilder.Entity<ClienteEndereco>().ToTable("Tb_cl_endereco");
+            modelBuilder.Entity<Cliente>().ToTable("Tb_cliente");
+            modelBuilder.Entity<ClienteEndereco>().ToTable("Tb_cl_endereco");
+            modelBuilder.Entity<Usuario>().ToTable("Tb_usuario");
         }
     }
 }
