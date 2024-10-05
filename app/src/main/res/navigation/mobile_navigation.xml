@@ -12,6 +12,11 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/nav_ClienteNovo"
+        android:name="com.example.farmtech_mobile.ui.clienteNovo.ClienteNovoFragment"
+        android:label="Cliente Novo"
+        tools:layout="@layout/fragment_cliente_novo"/>
+    <fragment
         android:id="@+id/nav_gallery"
         android:name="com.example.farmtech_mobile.ui.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
@@ -22,16 +27,19 @@
         android:name="com.example.farmtech_mobile.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+
     <fragment
         android:id="@+id/nav_vender"
         android:name="com.example.farmtech_mobile.ui.vender.VenderFragment"
         android:label="Vender"
         tools:layout="@layout/fragment_vender" />
+
     <fragment
         android:id="@+id/nav_producao"
         android:name="com.example.farmtech_mobile.ui.producao.ProducaoFragment"
         android:label="Produçao"
         tools:layout="@layout/fragment_producao" />
+
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.farmtech_mobile.ui.login.LoginFragment"
@@ -41,8 +49,9 @@
             android:id="@+id/action_loginFragment_to_nav_home"
             app:destination="@id/nav_home" />
     </fragment>
+
     <fragment
-        android:id="@+id/nav_clienteNovo"
+        android:id="@+id/aaaaaaaaaaaaa"
         android:name="com.example.farmtech_mobile.ui.clienteNovo.ClienteNovoFragment"
         android:label="fragment_cliente_novo"
         tools:layout="@layout/fragment_cliente_novo" />
