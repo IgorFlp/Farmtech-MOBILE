@@ -2,6 +2,7 @@ package com.example.farmtech_mobile.ui.clienteNovo;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.farmtech_mobile.R;
+import com.example.farmtech_mobile.SecundaryActivity;
 import com.example.farmtech_mobile.api.ApiService;
 import com.example.farmtech_mobile.api.RetrofitClient;
 import com.example.farmtech_mobile.data.model.Cliente;
@@ -37,16 +41,40 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ClienteNovoFragment extends Fragment {
-
+    private Toolbar toolbar;
     public ClienteNovoFragment() {
 
+    }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Captura o evento de voltar
+        getActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent(getActivity(), SecundaryActivity.class);
+                intent.putExtra("fragment", "Cliente");
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
     }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_cliente_novo, container, false);
+
+        // Acessa a Activity e define o título da Toolbar
+        if (getActivity() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Novo cliente");
+        }
+
         return inflater.inflate(R.layout.fragment_cliente_novo, container, false);
+
     }
     private EditText txtNome, txtCpf, txtEmail, txtTelefone;
     private Button btnCadastrar;

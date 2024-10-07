@@ -14,9 +14,19 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.FarmtechMOBILE.NoActionBar">
+    <style name="Theme.FarmtechMOBILE.NoActionBar" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/verde_forte</item>
+        <item name="colorPrimaryVariant">@color/verde_alternativa</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/verde_claro</item>
+        <item name="colorSecondaryVariant">@color/verde_claroAlternativa</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">@color/verde_alternativa</item>
     </style>
 
     <style name="Theme.FarmtechMOBILE.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

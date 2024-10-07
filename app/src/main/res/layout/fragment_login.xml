@@ -5,12 +5,12 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="100sp"
     android:paddingLeft="@dimen/fragment_horizontal_margin"
     android:paddingTop="@dimen/fragment_vertical_margin"
     android:paddingRight="@dimen/fragment_horizontal_margin"
     android:paddingBottom="@dimen/fragment_vertical_margin"
-    tools:context=".ui.login.LoginFragment">
-
+    tools:context=".MainActivity">
 
     <View
         android:id="@+id/view2"
@@ -70,6 +70,7 @@
         android:backgroundTint="@color/verde_button"
         android:backgroundTintMode="src_in"
         android:enabled="false"
+        android:text="Entrar"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
