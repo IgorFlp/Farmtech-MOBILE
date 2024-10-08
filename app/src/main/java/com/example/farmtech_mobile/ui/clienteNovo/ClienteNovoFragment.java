@@ -68,11 +68,6 @@ public class ClienteNovoFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_cliente_novo, container, false);
 
-        // Acessa a Activity e define o título da Toolbar
-        if (getActivity() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Novo cliente");
-        }
-
         return inflater.inflate(R.layout.fragment_cliente_novo, container, false);
 
     }

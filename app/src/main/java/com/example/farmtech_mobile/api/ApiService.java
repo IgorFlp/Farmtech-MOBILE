@@ -11,6 +11,8 @@ import retrofit2.http.Query;
 import java.util.List;
 import com.example.farmtech_mobile.data.model.Cliente;
 import com.example.farmtech_mobile.data.model.ClienteEndereco;
+import com.example.farmtech_mobile.data.model.Fornecedor;
+import com.example.farmtech_mobile.data.model.FornecedorEndereco;
 import com.example.farmtech_mobile.data.model.Usuario;
 
 
@@ -27,6 +29,18 @@ public interface ApiService {
 
     @POST("ClientesEnderecos")
     Call<ClienteEndereco> criarClienteEndereco(@Body ClienteEndereco clienteEndereco);
+
+    @GET("Fornecedores")
+    Call<List<Fornecedor>> getFornecedores();
+
+    @POST("Fornecedores")
+    Call<Fornecedor> criarFornecedor(@Body Fornecedor fornecedor);
+
+    @GET("FornecedoresEnderecos")
+    Call<List<FornecedorEndereco>> getFornecedoresEnderecos();
+
+    @POST("FornecedoresEnderecos")
+    Call<FornecedorEndereco> criarFornecedorEndereco(@Body FornecedorEndereco fornecedorEndereco);
 
     @GET("Usuario/logar")
     Call<Usuario> logar(@Query("login") String login, @Query("senha") String senha);

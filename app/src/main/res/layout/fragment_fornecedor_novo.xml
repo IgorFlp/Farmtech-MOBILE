@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layoutMode="clipBounds"
+                    android:orientation="vertical"
+                    android:paddingLeft="10sp"
+                    android:paddingTop="0sp"
+                    android:paddingBottom="0sp"
+                    android:showDividers="middle">
+
+                    <TextView
+                        android:id="@+id/lblNomeFantasia"
+                        android:layout_width="367dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0sp"
+                        android:layout_marginTop="20sp"
+                        android:layout_marginBottom="10sp"
+                        android:text="Nome Fantasia"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toTopOf="@+id/txtNomeFantasia"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.033"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <EditText
+                        android:id="@+id/txtNomeFantasia"
+                        android:layout_width="367dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0sp"
+                        android:layout_marginTop="0sp"
+                        android:layout_marginBottom="10sp"
+                        android:ems="10"
+                        android:inputType="text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.428"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/lblRazaoSocial"
+                        android:layout_width="367dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0sp"
+                        android:layout_marginTop="20sp"
+                        android:layout_marginBottom="10sp"
+                        android:text="Razão Social"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toTopOf="@+id/txtRazaoSocial"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.033"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <EditText
+                        android:id="@+id/txtRazaoSocial"
+                        android:layout_width="367dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0sp"
+                        android:layout_marginTop="0sp"
+                        android:layout_marginBottom="10sp"
+                        android:ems="10"
+                        android:inputType="text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.428"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/lblEmail"
+                        android:layout_width="367dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0sp"
+                        android:layout_marginTop="20sp"
+                        android:layout_marginBottom="10sp"
+                        android:text="Email"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toTopOf="@+id/txtEmail"
+                        app:layout_constraintTop_toBottomOf="@+id/txtNome"
+                        app:layout_constraintVertical_bias="1.0"
+                        tools:layout_editor_absoluteX="12dp" />
+
+                    <EditText
+                        android:id="@+id/txtEmail"
+                        android:layout_width="367dp"
+                        android:layout_height="42dp"
+                        android:layout_marginLeft="0sp"
+                        android:layout_marginTop="0sp"
+                        android:layout_marginBottom="10sp"
+                        android:ems="10"
+                        android:inputType="textEmailAddress"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.392"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txtNome" />
+
+                    <TextView
+                        android:id="@+id/lblTelefone"
+                        android:layout_width="367dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0sp"
+                        android:layout_marginLeft="0sp"
+                        android:layout_marginTop="20sp"
+                        android:layout_marginBottom="10sp"
+                        android:text="Telefone"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toTopOf="@+id/txtTelefone"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <EditText
+                        android:id="@+id/txtTelefone"
+                        android:layout_width="367dp"
+                        android:layout_height="41dp"
+                        android:layout_marginLeft="0sp"
+                        android:layout_marginTop="0sp"
+                        android:layout_marginBottom="10sp"
+                        android:ems="10"
+                        android:inputType="phone"
+                        android:maxLength="11"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.344"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txtEmail" />
+
+                    <TextView
+                        android:id="@+id/lblCnpj"
+                        android:layout_width="367dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0sp"
+                        android:layout_marginTop="20sp"
+                        android:layout_marginBottom="10sp"
+                        android:text="CNPJ"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toTopOf="@+id/txtCnpj"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <EditText
+                        android:id="@+id/txtCnpj"
+                        android:layout_width="367dp"
+                        android:layout_height="39dp"
+                        android:layout_marginLeft="0sp"
+                        android:layout_marginTop="0sp"
+                        android:layout_marginBottom="10sp"
+                        android:ems="10"
+                        android:inputType="numberSigned"
+                        android:maxLength="14"
+                        app:layout_constraintTop_toBottomOf="@+id/txtTelefone"
+                        tools:layout_editor_absoluteX="12dp" />
+                    <TextView
+                        android:id="@+id/lblRua"
+                        android:layout_width="367dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0sp"
+                        android:layout_marginTop="20sp"
+                        android:layout_marginBottom="10sp"
+                        android:text="Rua"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toTopOf="@+id/txtRua"
+                        tools:layout_editor_absoluteX="12dp" />
+
+                    <EditText
+                        android:id="@+id/txtRua"
+                        android:layout_width="367dp"
+                        android:layout_height="41dp"
+                        android:layout_marginLeft="0sp"
+                        android:layout_marginTop="0sp"
+                        android:layout_marginBottom="10sp"
+                        android:ems="10"
+                        android:inputType="text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.333"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/slcGenero" />
+
+                    <TextView
+                        android:id="@+id/lblBairro"
+                        android:layout_width="367dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0sp"
+                        android:layout_marginTop="20sp"
+                        android:layout_marginBottom="10sp"
+                        android:text="Bairro"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toTopOf="@+id/txtBairro"
+                        tools:layout_editor_absoluteX="11dp" />
+
+                    <EditText
+                        android:id="@+id/txtBairro"
+                        android:layout_width="367dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="0sp"
+                        android:layout_marginTop="0sp"
+                        android:layout_marginBottom="10sp"
+                        android:ems="10"
+                        android:inputType="text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.379"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txtRua" />
+
+                    <TextView
+                        android:id="@+id/lblCidade"
+                        android:layout_width="367dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20sp"
+                        android:layout_marginBottom="10sp"
+                        android:text="Cidade"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:id="@+id/txtCidade"
+                        android:layout_width="367dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10sp"
+                        android:ems="10"
+                        android:inputType="text" />
+
+                    <TextView
+                        android:id="@+id/lblEstado"
+                        android:layout_width="367dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20sp"
+                        android:layout_marginBottom="10sp"
+                        android:text="Estado"
+                        android:textSize="20sp" />
+
+                    <Spinner
+                        android:id="@+id/slcEstado"
+                        android:layout_width="367dp"
+                        android:layout_height="46sp"
+                        android:layout_marginBottom="10sp"
+                        android:entries="@array/estados_spinner" />
+
+                    <TextView
+                        android:id="@+id/lblCep"
+                        android:layout_width="367dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20sp"
+                        android:layout_marginBottom="10sp"
+                        android:text="CEP"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:id="@+id/txtCep"
+                        android:layout_width="367dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10sp"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:maxLength="8" />
+
+                    <LinearLayout
+                        android:layout_width="367sp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30sp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnConfirma"
+                            android:layout_width="102dp"
+                            android:layout_height="80sp"
+                            android:layout_marginRight="20sp"
+                            android:layout_weight="1"
+                            android:backgroundTint="#66DC62"
+                            android:insetTop="6dp"
+                            android:insetBottom="6dp"
+                            app:icon="@mipmap/ic_confirma_foreground"
+                            app:iconPadding="0sp"
+                            app:iconTint="#000000" />
+
+                        <Button
+                            android:id="@+id/btnCancela"
+                            android:layout_width="102dp"
+                            android:layout_height="80sp"
+                            android:layout_marginLeft="80sp"
+                            android:layout_weight="1"
+                            android:backgroundTint="#E95F5F"
+                            app:icon="@mipmap/ic_cancelar_foreground"
+                            app:iconPadding="0sp"
+                            app:iconTint="#000000" />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

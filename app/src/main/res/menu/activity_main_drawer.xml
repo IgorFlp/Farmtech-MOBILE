@@ -21,6 +21,9 @@
             android:id="@+id/nav_Cliente"
             android:title="Cliente" />
         <item
+            android:id="@+id/nav_fornecedor"
+            android:title="Fornecedor" />
+        <item
             android:id="@+id/nav_vender"
             android:icon="@drawable/ic_menu_vender"
             android:title="Vender" />

@@ -44,6 +44,9 @@ public class SecundaryActivity extends AppCompatActivity {
             if("Cliente".equals(fragment)){
                 NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_secundary);
                 navController.navigate(R.id.nav_Cliente);
+            }else if("Fornecedor".equals(fragment)){
+                NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_secundary);
+                navController.navigate(R.id.nav_fornecedor);
             }
         }
 
@@ -74,7 +77,7 @@ public class SecundaryActivity extends AppCompatActivity {
         NavigationView navigationView = binding.navView;
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_Cliente, R.id.nav_vender, R.id.nav_producao)
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_Cliente,R.id.nav_fornecedor, R.id.nav_vender, R.id.nav_producao)
                 .setOpenableLayout(drawer)
                 .build();
 

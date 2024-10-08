@@ -14,8 +14,13 @@
     <fragment
         android:id="@+id/nav_ClienteNovo"
         android:name="com.example.farmtech_mobile.ui.clienteNovo.ClienteNovoFragment"
-        android:label="Novo Cliente"
+        android:label="Novo cliente"
         tools:layout="@layout/fragment_cliente_novo" />
+    <fragment
+        android:id="@+id/nav_FornecedorNovo"
+        android:name="com.example.farmtech_mobile.ui.fornecedorNovo.FornecedorNovoFragment"
+        android:label="Novo fornecedor"
+        tools:layout="@layout/fragment_fornecedor_novo" />
 
-    </navigation>
+</navigation>
 

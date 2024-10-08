@@ -65,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("fragment", "Cliente");
                 startActivity(intent);
                 MainActivity.this.finish();
+            }else if (idMain == R.id.nav_FornecedorNovo) {
+                Intent intent = new Intent(MainActivity.this, SecundaryActivity.class);
+                intent.putExtra("fragment", "Fornecedor");
+                startActivity(intent);
+                MainActivity.this.finish();
             }
             Log.d("MainActivity", "UP FUNCIONOU");
         });
@@ -75,6 +80,10 @@ public class MainActivity extends AppCompatActivity {
             if("ClienteNovo".equals(fragment)){
                 NavController navControllerMain = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
                 navControllerMain.navigate(R.id.nav_ClienteNovo);
+            }
+            if("FornecedorNovo".equals(fragment)){
+                NavController navControllerMain = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+                navControllerMain.navigate(R.id.nav_FornecedorNovo);
             }
 
         }
