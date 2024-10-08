@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="10sp"
+    android:paddingRight="10sp"
+    android:showDividers="middle"
     tools:context=".ui.Cliente.ClienteFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -13,4 +18,155 @@
         android:layout_height="wrap_content"
         android:text="Novo" />
 
-</FrameLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/tableClientes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTintMode="add"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:backgroundTintMode="add"
+                    android:gravity="center_horizontal"
+                    android:text="Clientes"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/clientesLista"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:tag="clientesLista">
+
+                <LinearLayout
+                    android:id="@+id/cliente1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:tag="clienteContainer">
+
+                    <LinearLayout
+                        android:id="@+id/clienteRow1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:tag="clienteRow">
+
+                        <CheckBox
+                            android:id="@+id/cbCliente1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/lblCliente1"
+                            android:layout_width="257dp"
+                            android:layout_height="wrap_content"
+                            android:text="Nome do cliente"
+                            android:textSize="20sp" />
+
+                        <ImageView
+                            android:id="@+id/dropdownButton1"
+                            android:layout_width="48dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:layout_marginLeft="40sp"
+                            android:src="@mipmap/dropdown_foreground"
+                            android:tag="dropdownButton" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/clienteData1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:tag="clienteData"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/dadosCliente1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15sp"
+                            android:text="DADOS DO CLIENTE"
+                            android:visibility="visible" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cliente2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:tag="clienteContainer">
+
+                    <LinearLayout
+                        android:id="@+id/clienteRow2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:tag="clienteRow">
+
+                        <CheckBox
+                            android:id="@+id/cbCliente2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/lblCliente2"
+                            android:layout_width="257dp"
+                            android:layout_height="wrap_content"
+                            android:text="Nome do cliente"
+                            android:textSize="20sp" />
+
+                        <ImageView
+                            android:id="@+id/dropdownButton2"
+                            android:layout_width="48dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:layout_marginLeft="40sp"
+                            android:src="@mipmap/dropdown_foreground"
+                            android:tag="dropdownButton" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/clienteData2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:tag="clienteData"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/dadosCliente2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15sp"
+                            android:text="DADOS DO CLIENTE"
+                            android:visibility="visible" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>
