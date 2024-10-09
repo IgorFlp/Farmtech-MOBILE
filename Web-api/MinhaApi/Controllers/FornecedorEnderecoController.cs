@@ -57,4 +57,23 @@ public class FornecedoresEnderecosController : ControllerBase
 
         return NoContent();
     }
+    // DELETE: api/Fornecedorendereco/5
+	[HttpDelete("{cnpj}")]
+	public async Task<IActionResult> DeleteCliente(string cnpj)
+	{
+		var endereco = await _context.FornecedoresEnderecos.FindAsync(cnpj);
+		if (endereco == null)
+		{
+			return NotFound();
+		}
+
+		_context.FornecedoresEnderecos.Remove(endereco);
+		await _context.SaveChangesAsync();
+
+		return NoContent();
+	}
+    private bool FornecedorEnderecoExists(string cnpj)
+	{
+		return _context.FornecedoresEnderecos.Any(e => e.Frn_cnpj == cnpj);
+	}
 }

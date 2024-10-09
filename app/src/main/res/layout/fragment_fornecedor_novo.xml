@@ -294,7 +294,7 @@
                             app:iconTint="#000000" />
 
                         <Button
-                            android:id="@+id/btnCancela"
+                            android:id="@+id/btnCancelar"
                             android:layout_width="102dp"
                             android:layout_height="80sp"
                             android:layout_marginLeft="80sp"

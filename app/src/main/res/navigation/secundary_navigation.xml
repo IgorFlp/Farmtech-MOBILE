@@ -21,16 +21,6 @@
         android:label="Vender"
         tools:layout="@layout/fragment_vender" />
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.farmtech_mobile.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.farmtech_mobile.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
-    <fragment
         android:id="@+id/nav_Cliente"
         android:name="com.example.farmtech_mobile.ui.Cliente.ClienteFragment"
         android:label="Clientes"
@@ -40,5 +30,10 @@
         android:name="com.example.farmtech_mobile.ui.fornecedor.FornecedorFragment"
         android:label="Fornecedores"
         tools:layout="@layout/fragment_fornecedor" />
+    <fragment
+        android:id="@+id/nav_usuario"
+        android:name="com.example.farmtech_mobile.ui.usuarios.UsuarioFragment"
+        android:label="Usuarios"
+        tools:layout="@layout/fragment_usuario" />
 
 </navigation>

@@ -1,26 +1,34 @@
 package com.example.farmtech_mobile.ui.Cliente;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.farmtech_mobile.MainActivity;
 import com.example.farmtech_mobile.R;
+import com.example.farmtech_mobile.SecundaryActivity;
 import com.example.farmtech_mobile.api.ApiService;
 import com.example.farmtech_mobile.api.RetrofitClient;
 import com.example.farmtech_mobile.data.model.Cliente;
@@ -32,6 +40,7 @@ import com.example.farmtech_mobile.databinding.FragmentLoginBinding;
 import com.example.farmtech_mobile.ui.login.LoginViewModel;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -40,6 +49,7 @@ import java.util.ListIterator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Converter;
 import retrofit2.Response;
 
 /**
@@ -67,6 +77,7 @@ public class ClienteFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final Button btnNovoCliente = binding.btnNovoCliente;
+        final Button btnAlterarCliente = binding.btnAlterarCliente;
         LinearLayout clienteLista = binding.clientesLista;
 
         ApiService apiService = RetrofitClient.getApiService();
@@ -112,8 +123,10 @@ public class ClienteFragment extends Fragment {
                                                  clienteRow.setLayoutParams(new LinearLayout.LayoutParams(
                                                          LinearLayout.LayoutParams.MATCH_PARENT,
                                                          LinearLayout.LayoutParams.WRAP_CONTENT
+
                                                  ));
                                                  clienteRow.setOrientation(LinearLayout.HORIZONTAL);
+                                                 clienteRow.setGravity(Gravity.CENTER_VERTICAL);
                                                  clienteRow.setTag("clienteRow");
                                                  clienteRow.setId(View.generateViewId());
                                                  int rowId = clienteRow.getId();
@@ -123,12 +136,16 @@ public class ClienteFragment extends Fragment {
                                                  cbCliente.setLayoutParams(new LinearLayout.LayoutParams(
                                                          LinearLayout.LayoutParams.WRAP_CONTENT,
                                                          LinearLayout.LayoutParams.WRAP_CONTENT));
+                                                 cbCliente.setTag("cbCliente");
                                                  cbCliente.setId(View.generateViewId());
 
+
                                                  TextView lblCliente = new TextView(contextRow);
-                                                 lblCliente.setLayoutParams(new LinearLayout.LayoutParams(
+                                                 LinearLayout.LayoutParams  lblClienteParams = new LinearLayout.LayoutParams(
                                                          dpToPx(257), // largura em pixels
-                                                         LinearLayout.LayoutParams.WRAP_CONTENT));
+                                                         LinearLayout.LayoutParams.WRAP_CONTENT);
+                                                 lblClienteParams.setMargins(20, 0, 0, 0);
+                                                 lblCliente.setLayoutParams(lblClienteParams);
                                                  lblCliente.setText(cliente.getNome());
                                                  lblCliente.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                                                  lblCliente.setId(View.generateViewId());
@@ -137,8 +154,9 @@ public class ClienteFragment extends Fragment {
                                                  ImageView dropdownButton = new ImageView(contextRow);
                                                  LinearLayout.LayoutParams dropdownLayoutParams = new LinearLayout.LayoutParams(
                                                          dpToPx(48), // largura em pixels
-                                                         LinearLayout.LayoutParams.MATCH_PARENT);
-                                                 dropdownLayoutParams.setMargins(40, 0, 0, 0);
+                                                         dpToPx(48));
+                                                 dropdownLayoutParams.setMargins(dpToPx(40), 0, 0, 0);
+                                                 dropdownButton.setLayoutParams(dropdownLayoutParams);
                                                  dropdownButton.setImageResource(R.mipmap.dropdown_foreground);
                                                  dropdownButton.setTag("dropdownButton");
                                                  dropdownButton.setId(View.generateViewId());
@@ -150,7 +168,7 @@ public class ClienteFragment extends Fragment {
                                                  LinearLayout clienteData = new LinearLayout(contextContainer);
                                                  clienteData.setLayoutParams(new LinearLayout.LayoutParams(
                                                          LinearLayout.LayoutParams.MATCH_PARENT,
-                                                         LinearLayout.LayoutParams.MATCH_PARENT));
+                                                         LinearLayout.LayoutParams.WRAP_CONTENT));
                                                  clienteData.setOrientation(LinearLayout.VERTICAL);
                                                  clienteData.setTag("clienteData");
                                                  clienteData.setVisibility(View.GONE);
@@ -162,15 +180,18 @@ public class ClienteFragment extends Fragment {
                                                          LinearLayout.LayoutParams.WRAP_CONTENT,
                                                          LinearLayout.LayoutParams.WRAP_CONTENT));
                                                  String clienteJson = gson.toJson(cliente);
-                                                 dadosCliente.setText(clienteJson);
+                                                 dadosCliente.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                                                 dadosCliente.setTag(cliente.getCpf());
+                                                 dadosCliente.setText("Nome: "+cliente.getNome()+"\nCPF: "+cliente.getCpf()+"\nTelefone: "+cliente.getTelefone()+"\nEmail: "+cliente.getEmail()+"\nNascimento: "+cliente.getDataNasc()+"\nGenero: "+cliente.getGenero()+"\n");
                                                  clienteData.addView(dadosCliente);
 
                                                  TextView dadosEndereco = new TextView(contextData);
-                                                 dadosCliente.setLayoutParams(new LinearLayout.LayoutParams(
+                                                 dadosEndereco.setLayoutParams(new LinearLayout.LayoutParams(
                                                          LinearLayout.LayoutParams.WRAP_CONTENT,
                                                          LinearLayout.LayoutParams.WRAP_CONTENT));
                                                  String enderecoJson = gson.toJson(enderecos.get(i));
-                                                 dadosCliente.setText(enderecoJson);
+                                                 dadosEndereco.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                                                 dadosEndereco.setText("Rua: "+enderecos.get(i).getRua()+"\nBairro: "+enderecos.get(i).getBairro()+"\nCidade: "+enderecos.get(i).getCidade()+"\nEstado: "+enderecos.get(i).getEstado()+"\nCEP: "+enderecos.get(i).getCep()+"\n");
                                                  clienteData.addView(dadosEndereco);
 
 
@@ -178,8 +199,10 @@ public class ClienteFragment extends Fragment {
                                                 clienteContainer.addView(clienteData);
 
                                                 clienteLista.addView(clienteContainer);
+
                                                 i++;
                                              }
+                                             criaListeners();
                                          }
                                      }
                                      @Override
@@ -205,8 +228,121 @@ public class ClienteFragment extends Fragment {
                 getActivity().finish();
             }
         });
+        Button btnDeleteCliente = binding.btnDeleteCliente;
+        btnDeleteCliente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox selecionado = null;
 
+                for (int i = 0; i < clienteLista.getChildCount(); i++) {
+                    View container = clienteLista.getChildAt(i);
+                    View row = container.findViewWithTag("clienteRow");
+                    CheckBox cb = row.findViewWithTag("cbCliente");
+                    if (cb.isChecked()) {
+                        selecionado = cb;
+                    }
+                }
+                if(selecionado != null){
+                    LinearLayout clienteContainer = (LinearLayout) selecionado.getParent().getParent();
+                    LinearLayout clienteData = clienteContainer.findViewWithTag("clienteData");
+                    String cpf = (String) clienteData.getChildAt(0).getTag();
+                    Log.d("Delete", "CPF Selecionado: " + cpf);
 
+                    Call<ClienteEndereco> deleteEndereco = apiService.deleteClienteEndereco(cpf);
+                    deleteEndereco.enqueue(new Callback<ClienteEndereco>() {
+                        @Override
+                        public void onResponse(Call<ClienteEndereco> delete, Response<ClienteEndereco> response) {
+                            if (response.isSuccessful()) {
+                                Log.d("EnderecoDelete", "Endereco deletado com sucesso ");
+                                Call<Cliente> deleteCliente = apiService.deleteCliente(cpf);
+                                deleteCliente.enqueue(new Callback<Cliente>() {
+                                    @Override
+                                    public void onResponse(Call<Cliente> delete, Response<Cliente> response) {
+                                        if (response.isSuccessful()) {
+                                            Log.d("ClienteDelete", "Cliente deletado com sucesso ");
+                                            new AlertDialog.Builder(getContext())
+                                                    .setTitle("Cadastro de cliente")
+                                                    .setMessage("Cliente deletado com sucesso!")
+                                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment_content_secundary);
+                                                            navController.navigate(R.id.nav_Cliente);
+                                                        }
+                                                    })
+                                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                                    .show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<Cliente> delete, Throwable t) {
+                                        Log.e("ClienteDelete, ", "Erro: " + t.getMessage());
+                                    };
+                                });
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<ClienteEndereco> delete, Throwable t) {
+                            Log.e("EnderecoDelete", "Erro: " + t.getMessage());
+                        };;
+                });
+                }else{
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Cadastro de cliente")
+                            .setMessage("Selecione uma checkbox!")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment_content_secundary);
+                                    navController.navigate(R.id.nav_Cliente);
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+                }
+            });
+
+        btnAlterarCliente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox selecionado = null;
+                for (int i = 0; i < clienteLista.getChildCount(); i++) {
+                    View container = clienteLista.getChildAt(i);
+                    View row = container.findViewWithTag("clienteRow");
+                    CheckBox cb = row.findViewWithTag("cbCliente");
+                    if (cb.isChecked()) {
+                        selecionado = cb;
+                    }
+                }
+                if(selecionado != null){
+                    LinearLayout clienteContainer = (LinearLayout) selecionado.getParent().getParent();
+                    LinearLayout clienteData = clienteContainer.findViewWithTag("clienteData");
+                    String cpf = (String) clienteData.getChildAt(0).getTag();
+                    Log.d("Alterar", "CPF Selecionado: " + cpf);
+
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    intent.putExtra("fragment", "ClienteAlterar");
+                    intent.putExtra("cpf", cpf);
+                    startActivity(intent);
+                    getActivity().finish();
+                }else{
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Cadastro de cliente")
+                            .setMessage("Selecione uma checkbox!")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment_content_secundary);
+                                    navController.navigate(R.id.nav_Cliente);
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+
+            }
+        });
+    }
+    private void criaListeners() {
+        LinearLayout clienteLista = binding.clientesLista;
         View.OnClickListener dropdownListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -226,6 +362,33 @@ public class ClienteFragment extends Fragment {
                 int clienteId = container.getId();
             }
         };
+        List<CheckBox> checkBoxes = new ArrayList<>();
+        LinearLayout clienteRow = binding.clientesLista.findViewWithTag("clienteRow");
+        for (int i = 0; i < clienteLista.getChildCount(); i++) {
+            View container = clienteLista.getChildAt(i);
+            View row = container.findViewWithTag("clienteRow");
+            CheckBox cb = row.findViewWithTag("cbCliente");
+            checkBoxes.add(cb);
+            Log.d("Checkboxes", "Adicionou: "+cb.getTag());
+        }
+        for(CheckBox checkBox: checkBoxes){
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    if (isChecked) {
+                        CheckBox selecionado = checkBox;
+                        for (CheckBox checkBox : checkBoxes) {
+                            if(checkBox != selecionado){
+                                checkBox.setChecked(false);
+                            }
+                        }
+                    }
+                }
+            });
+            }
+
+
         for (int i = 0; i < clienteLista.getChildCount(); i++) {
 
             String tag = "dropdownButton";
@@ -235,9 +398,7 @@ public class ClienteFragment extends Fragment {
             dropdownButton.setOnClickListener(dropdownListener);
         }
 
-
     }
-
 
 
     public ClienteFragment() {

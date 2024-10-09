@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.example.farmtech_mobile.MainActivity;
 import com.example.farmtech_mobile.R;
 import com.example.farmtech_mobile.SecundaryActivity;
 import com.example.farmtech_mobile.api.ApiService;
@@ -154,8 +155,10 @@ public class FornecedorNovoFragment extends Fragment {
                                                     .setMessage("Fornecedor cadastrado com sucesso!")
                                                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int which) {
-                                                            // Ação ao clicar no botão "OK"
-                                                            view.invalidate();
+                                                            Intent intent = new Intent(getActivity(), SecundaryActivity.class);
+                                                            intent.putExtra("fragment", "Fornecedor");
+                                                            startActivity(intent);
+                                                            getActivity().finish();
                                                         }
                                                     })
                                                     .setIcon(android.R.drawable.ic_dialog_alert)

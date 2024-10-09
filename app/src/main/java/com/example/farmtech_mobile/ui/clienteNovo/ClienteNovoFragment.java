@@ -20,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.farmtech_mobile.R;
 import com.example.farmtech_mobile.SecundaryActivity;
@@ -73,6 +75,7 @@ public class ClienteNovoFragment extends Fragment {
     }
     private EditText txtNome, txtCpf, txtEmail, txtTelefone;
     private Button btnCadastrar;
+    private Button btnCancelar;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -109,7 +112,7 @@ public class ClienteNovoFragment extends Fragment {
 
 
         btnCadastrar = view.findViewById(R.id.btnConfirma);
-
+        btnCancelar = view.findViewById(R.id.btnCancelar);
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
 
@@ -214,8 +217,10 @@ public class ClienteNovoFragment extends Fragment {
                                                     .setMessage("Cliente cadastrado com sucesso!")
                                                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int which) {
-                                                            // Ação ao clicar no botão "OK"
-                                                            view.invalidate();
+                                                            Intent intent = new Intent(getActivity(), SecundaryActivity.class);
+                                                            intent.putExtra("fragment", "Cliente");
+                                                            startActivity(intent);
+                                                            getActivity().finish();
                                                         }
                                                     })
                                                     .setIcon(android.R.drawable.ic_dialog_alert)
@@ -257,6 +262,15 @@ public class ClienteNovoFragment extends Fragment {
                 }
                 //Log.d("ClienteNovoFragment","Cliente: "+json);
 
+            }
+        });
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SecundaryActivity.class);
+                intent.putExtra("fragment", "Cliente");
+                startActivity(intent);
+                getActivity().finish();
             }
         });
 

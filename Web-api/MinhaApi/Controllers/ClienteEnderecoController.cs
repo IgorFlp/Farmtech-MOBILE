@@ -44,10 +44,10 @@ public class ClientesEnderecosController : ControllerBase
         return CreatedAtAction(nameof(GetClientesEnderecos), new { cpf = clienteEndereco.Cl_cpf }, clienteEndereco);
     }
 
-    [HttpPut("{cpf}")]
-    public async Task<IActionResult> PutEndereco(string cpf, ClienteEndereco clienteEndereco)
+    [HttpPut("{cl_cpf}")]
+    public async Task<IActionResult> PutEndereco(string cl_cpf, ClienteEndereco clienteEndereco)
     {
-        if (cpf != clienteEndereco.Cl_cpf)
+        if (cl_cpf != clienteEndereco.Cl_cpf)
         {
             return BadRequest();
         }
@@ -57,4 +57,18 @@ public class ClientesEnderecosController : ControllerBase
 
         return NoContent();
     }
+    [HttpDelete("{cl_cpf}")]
+	public async Task<IActionResult> DeleteEndereco(string cl_cpf)
+	{
+		var endereco = await _context.ClientesEnderecos.FindAsync(cl_cpf);
+		if (endereco == null)
+		{
+			return NotFound();
+		}
+
+		_context.ClientesEnderecos.Remove(endereco);
+		await _context.SaveChangesAsync();
+
+		return NoContent();
+	}
 }
