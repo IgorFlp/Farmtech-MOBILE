@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
@@ -9,6 +10,10 @@
             android:icon="@mipmap/inicio_foreground"
             android:title="Início" />
 
+        <item
+            android:checkable="false"
+            android:enabled="false"
+            android:title="Cadastros" />
         <item
             android:id="@+id/nav_Cliente"
             android:icon="@mipmap/cliente_foreground"
@@ -24,6 +29,10 @@
 
     </group>
     <group >
+        <item
+            android:checkable="false"
+            android:enabled="false"
+            android:title="Movimentações" />
         <item
             android:id="@+id/nav_vender"
             android:icon="@drawable/ic_menu_vender"

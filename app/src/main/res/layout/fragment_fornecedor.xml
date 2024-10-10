@@ -23,7 +23,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:foreground="@mipmap/adicionar_foreground"
-                android:foregroundTint="@color/white"
+                android:foregroundTint="@color/black"
                 app:iconGravity="start"
                 app:iconPadding="1dp" />
 
@@ -34,172 +34,176 @@
                 android:layout_marginLeft="5sp"
                 android:layout_weight="0"
                 android:foreground="@mipmap/alterar_foreground"
-                android:foregroundTint="@color/white" />
+                android:foregroundTint="@color/black" />
 
             <Button
                 android:id="@+id/btnDeleteFornecedor"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginLeft="230dp"
+                android:layout_marginLeft="235dp"
                 android:foreground="@mipmap/delete_foreground"
-                android:foregroundTint="@color/white" />
+                android:foregroundTint="@color/black" />
         </LinearLayout>
 
-        <ScrollView
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/verde_fundo">
+
+        <LinearLayout
+            android:id="@+id/tableFornecedores"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/tableFornecedores"
+                android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:id="@+id/header"
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/verde_forte"
+                    android:backgroundTintMode="add"
+                    android:gravity="center_horizontal"
+                    android:text="Fornecedores"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-                    <TextView
+            <LinearLayout
+                android:id="@+id/fornecedoresLista"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="10sp"
+                android:tag="fornecedoresLista">
+
+                <LinearLayout
+                    android:id="@+id/fornecedor1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:tag="fornecedorContainer"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/fornecedorRow1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:backgroundTintMode="add"
-                        android:gravity="center_horizontal"
-                        android:text="Fornecedores"
-                        android:textSize="24sp" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:tag="fornecedorRow"
+                        android:visibility="visible">
+
+                        <CheckBox
+                            android:id="@+id/cbFornecedor1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:tag="cbFornecedor" />
+
+                        <TextView
+                            android:id="@+id/lblFornecedor1"
+                            android:layout_width="257dp"
+                            android:layout_height="wrap_content"
+                            android:text="Nome do fornecedor"
+                            android:textSize="20sp" />
+
+                        <ImageView
+                            android:id="@+id/dropdownButton1"
+                            android:layout_width="48dp"
+                            android:layout_height="49dp"
+                            android:layout_gravity="end"
+                            android:layout_marginLeft="40sp"
+                            android:src="@mipmap/dropdown_foreground"
+                            android:tag="dropdownButton" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/fornecedorData1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:tag="fornecedorData"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:id="@+id/dadosFornecedor1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15sp"
+                            android:text="DADOS DO FORNECEDOR"
+                            android:visibility="visible" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/fornecedoresLista"
+                    android:id="@+id/fornecedor2"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingLeft="10sp"
-                    android:tag="fornecedoresLista">
+                    android:tag="fornecedorContainer"
+                    android:visibility="gone">
 
                     <LinearLayout
-                        android:id="@+id/fornecedor1"
+                        android:id="@+id/fornecedorRow2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:tag="fornecedorContainer"
-                        android:visibility="gone">
+                        android:orientation="horizontal"
+                        android:tag="fornecedorRow">
 
-                        <LinearLayout
-                            android:id="@+id/fornecedorRow1"
-                            android:layout_width="match_parent"
+                        <CheckBox
+                            android:id="@+id/cbFornecedor2"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:tag="fornecedorRow"
-                            android:visibility="visible">
+                            android:tag="cbFornecedor" />
 
-                            <CheckBox
-                                android:id="@+id/cbFornecedor1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:tag="cbFornecedor" />
+                        <TextView
+                            android:id="@+id/lblFornecedor2"
+                            android:layout_width="257dp"
+                            android:layout_height="wrap_content"
+                            android:text="Nome do fornecedor"
+                            android:textSize="20sp" />
 
-                            <TextView
-                                android:id="@+id/lblFornecedor1"
-                                android:layout_width="257dp"
-                                android:layout_height="wrap_content"
-                                android:text="Nome do fornecedor"
-                                android:textSize="20sp" />
-
-                            <ImageView
-                                android:id="@+id/dropdownButton1"
-                                android:layout_width="48dp"
-                                android:layout_height="49dp"
-                                android:layout_gravity="end"
-                                android:layout_marginLeft="40sp"
-                                android:src="@mipmap/dropdown_foreground"
-                                android:tag="dropdownButton" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/fornecedorData1"
-                            android:layout_width="match_parent"
+                        <ImageView
+                            android:id="@+id/dropdownButton2"
+                            android:layout_width="48dp"
                             android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:tag="fornecedorData"
-                            android:visibility="visible">
-
-                            <TextView
-                                android:id="@+id/dadosFornecedor1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="15sp"
-                                android:text="DADOS DO FORNECEDOR"
-                                android:visibility="visible" />
-                        </LinearLayout>
+                            android:layout_gravity="end"
+                            android:layout_marginLeft="40sp"
+                            android:src="@mipmap/dropdown_foreground"
+                            android:tag="dropdownButton" />
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/fornecedor2"
+                        android:id="@+id/fornecedorData2"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:tag="fornecedorContainer"
+                        android:tag="fornecedorData"
                         android:visibility="gone">
 
-                        <LinearLayout
-                            android:id="@+id/fornecedorRow2"
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/dadosFornecedor2"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:tag="fornecedorRow">
-
-                            <CheckBox
-                                android:id="@+id/cbFornecedor2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:tag="cbFornecedor" />
-
-                            <TextView
-                                android:id="@+id/lblFornecedor2"
-                                android:layout_width="257dp"
-                                android:layout_height="wrap_content"
-                                android:text="Nome do fornecedor"
-                                android:textSize="20sp" />
-
-                            <ImageView
-                                android:id="@+id/dropdownButton2"
-                                android:layout_width="48dp"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="end"
-                                android:layout_marginLeft="40sp"
-                                android:src="@mipmap/dropdown_foreground"
-                                android:tag="dropdownButton" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/fornecedorData2"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:tag="fornecedorData"
-                            android:visibility="gone">
-
-                            <TextView
-                                android:id="@+id/dadosFornecedor2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="15sp"
-                                android:text="DADOS DO FORNECEDOR"
-                                android:visibility="visible" />
-                        </LinearLayout>
+                            android:layout_marginLeft="15sp"
+                            android:text="DADOS DO FORNECEDOR"
+                            android:visibility="visible" />
                     </LinearLayout>
-
                 </LinearLayout>
 
             </LinearLayout>
-        </ScrollView>
+
+        </LinearLayout>
+    </ScrollView>
 
 
     </LinearLayout>

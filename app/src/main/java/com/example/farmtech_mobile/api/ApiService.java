@@ -92,4 +92,19 @@ public interface ApiService {
     @GET("Usuario/logar")
     Call<Usuario> logar(@Query("login") String login, @Query("senha") String senha);
 
+    @GET("Usuario")
+    Call<List<Usuario>> getUsuarios();
+
+    @GET("Usuario/{id}")
+    Call<Usuario> getUsuario(@Path("id") Integer id);
+
+    @POST("Usuario")
+    Call<Usuario> criarUsuario(@Body Usuario usuario);
+
+    @PUT("Usuario/{id}")
+    Call<Usuario> atualizarUsuario(@Path("id") Integer id,@Body Usuario usuario);
+
+    @DELETE("Usuario/{id}")
+    Call<Usuario> deleteUsuario(@Path("id") Integer id);
+
 }

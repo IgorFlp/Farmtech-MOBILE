@@ -59,7 +59,7 @@ public class LoginViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     Log.d("LoginFragment", "Login efetuado com sucesso: " + response.body());
                     Usuario usuario = response.body();
-                    LoggedInUser  loggedInUser = new LoggedInUser(usuario.getUsuario(), usuario.getNome());
+                    LoggedInUser  loggedInUser = new LoggedInUser(usuario.getLogin(), usuario.getNome());
 
                     Result result = new Result.Success(usuario);
                     if (result instanceof Result.Success) {

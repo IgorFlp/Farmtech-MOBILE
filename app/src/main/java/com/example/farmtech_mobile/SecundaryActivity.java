@@ -77,7 +77,7 @@ public class SecundaryActivity extends AppCompatActivity {
         NavigationView navigationView = binding.navView;
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_Cliente,R.id.nav_fornecedor, R.id.nav_vender, R.id.nav_producao)
+                R.id.nav_home, R.id.nav_Cliente,R.id.nav_fornecedor,R.id.nav_usuario,R.id.nav_vender, R.id.nav_producao)
                 .setOpenableLayout(drawer)
                 .build();
 

@@ -8,7 +8,8 @@
     android:paddingLeft="10sp"
     android:paddingRight="10sp"
     android:showDividers="middle"
-    tools:context=".ui.usuarios.UsuarioFragment">  
+    tools:context=".ui.usuarios.UsuarioFragment">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +21,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:foreground="@mipmap/adicionar_foreground"
-            android:foregroundTint="@color/white"
+            android:foregroundTint="@color/black"
             app:iconGravity="start"
             app:iconPadding="1dp" />
 
@@ -31,7 +32,7 @@
             android:layout_marginLeft="5sp"
             android:layout_weight="0"
             android:foreground="@mipmap/alterar_foreground"
-            android:foregroundTint="@color/white" />
+            android:foregroundTint="@color/black" />
 
         <Button
             android:id="@+id/btnDeleteUsuario"
@@ -39,15 +40,112 @@
             android:layout_height="50dp"
             android:layout_marginLeft="230dp"
             android:foreground="@mipmap/delete_foreground"
-            android:foregroundTint="@color/white" />
+            android:foregroundTint="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/camposCadastroLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20sp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:textColor="#070000"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/txtLoginUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:ems="10"
+            android:hint="Preencha o login"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Senha"
+            android:textColor="#070000"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/txtSenhaUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:ems="10"
+            android:hint="Preencha a senha"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nome"
+            android:textColor="#070000"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/txtNomeUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:ems="10"
+            android:hint="Preencha o nome"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cargo"
+            android:textColor="#070000"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/slcCargo"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginBottom="10sp"
+            android:entries="@array/cargo_spinner" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnSalvar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_weight="0"
+                android:foreground="@mipmap/salvar_foreground"
+                android:foregroundTint="@color/black" />
+
+            <Button
+                android:id="@+id/btnEsconder"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="270sp"
+                android:layout_weight="0"
+                android:foreground="@mipmap/dropup_foreground" />
+        </LinearLayout>
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/verde_fundo">
 
         <LinearLayout
-            android:id="@+id/tableUsuarioes"
+            android:id="@+id/tableUsuarios"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -62,14 +160,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:background="@color/verde_forte"
                     android:backgroundTintMode="add"
                     android:gravity="center_horizontal"
                     android:text="Usuarios"
-                    android:textSize="24sp" />
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/usuarioesLista"
+                android:id="@+id/usuariosLista"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"

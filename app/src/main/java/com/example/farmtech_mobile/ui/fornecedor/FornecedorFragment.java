@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -136,6 +137,7 @@ public class FornecedorFragment extends Fragment {
                                     lblFornecedor.setLayoutParams(lblFornecedorParams);
                                     lblFornecedor.setText(fornecedor.getNomeFantasia());
                                     lblFornecedor.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                    lblFornecedor.setTextColor(Color.parseColor("#242424"));
                                     lblFornecedor.setId(View.generateViewId());
                                     lblFornecedor .setTag("fornecedorLabel");
 
@@ -394,7 +396,7 @@ public class FornecedorFragment extends Fragment {
             // Required empty public constructor
         }
 
-        // TODO: Rename and change types and number of parameters
+
         public static FornecedorFragment newInstance(String param1, String param2) {
             FornecedorFragment fragment = new FornecedorFragment();
             Bundle args = new Bundle();

@@ -155,7 +155,7 @@ public class FornecedorAlterarFragment extends Fragment {
                                 List<String> estadosList = new ArrayList<>(Arrays.asList(estadosArray));
 
                                 // Criar o adaptador para o Spinner
-                               ArrayAdapter<String> adapterEstados = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, estadosList);
+                                ArrayAdapter<String> adapterEstados = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, estadosList);
 
                                 slcEstado.setAdapter(adapterEstados);
 

@@ -23,7 +23,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:foreground="@mipmap/adicionar_foreground"
-            android:foregroundTint="@color/white"
+            android:foregroundTint="@color/black"
             app:iconGravity="start"
             app:iconPadding="1dp" />
 
@@ -34,20 +34,21 @@
             android:layout_marginLeft="5sp"
             android:layout_weight="0"
             android:foreground="@mipmap/alterar_foreground"
-            android:foregroundTint="@color/white" />
+            android:foregroundTint="@color/black" />
 
         <Button
             android:id="@+id/btnDeleteCliente"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="230dp"
+            android:layout_marginLeft="235dp"
             android:foreground="@mipmap/delete_foreground"
-            android:foregroundTint="@color/white" />
+            android:foregroundTint="@color/black" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/verde_fundo">
 
         <LinearLayout
             android:id="@+id/tableClientes"
@@ -65,10 +66,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:backgroundTintMode="add"
+                    android:background="@color/verde_forte"
                     android:gravity="center_horizontal"
                     android:text="Clientes"
-                    android:textSize="24sp" />
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -94,7 +97,7 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:tag="clienteRow"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <CheckBox
                             android:id="@+id/cbCliente1"
@@ -107,7 +110,8 @@
                             android:layout_width="257dp"
                             android:layout_height="wrap_content"
                             android:text="Nome do cliente"
-                            android:textSize="20sp" />
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
 
                         <ImageView
                             android:id="@+id/dropdownButton1"

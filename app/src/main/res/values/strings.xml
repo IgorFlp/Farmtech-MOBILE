@@ -168,6 +168,16 @@
         <item> </item>
 
     </string-array>
+    <string-array name="cargo_spinner">
+        <item> </item>
+        <item>Estoquista</item>
+        <item>Produtor</item>
+        <item>Vendedor</item>
+        <item>Gerente de estoque</item>
+        <item>Gerente de produção</item>
+        <item>Gerente de vendas</item>
+        <item>Gerente geral </item>
+    </string-array>
     <string-array name="genero_spinner">
         <item> </item>
         <item>Masculino</item>

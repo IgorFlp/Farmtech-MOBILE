@@ -2,14 +2,14 @@ package com.example.farmtech_mobile.data.model;
 
 public class Usuario {
     private int id;
-    private String usuario;
+    private String login;
     private String senha;
     private String cargo;
     private String nome;
 
-    public Usuario(int id, String usuario, String senha,String cargo, String nome){
+    public Usuario(int id, String login, String senha,String cargo, String nome){
         this.id = id;
-        this.usuario = usuario;
+        this.login = login;
         this.senha = senha;
         this.cargo = cargo;
         this.nome = nome;
@@ -23,12 +23,12 @@ public class Usuario {
         this.id = id;
     }
 
-    public String getUsuario() {
-        return usuario;
+    public String getLogin() {
+        return login;
     }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getSenha() {
