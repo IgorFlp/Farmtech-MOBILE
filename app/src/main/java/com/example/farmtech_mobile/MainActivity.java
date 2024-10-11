@@ -1,53 +1,110 @@
 package com.example.farmtech_mobile;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.navigation.NavigationView;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.farmtech_mobile.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration mAppBarConfiguration;
+
     private ActivityMainBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Inicializando o ViewBinding antes de configurar os elementos
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.appBarMain.toolbar);
-        binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null)
-                        .setAnchorView(R.id.fab).show();
+        Toolbar toolbar = findViewById(R.id.Main_toolbar);
+        setSupportActionBar(toolbar);
+
+        // Configurar NavController e AppBarConfiguration
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+
+        // Sincronizar a Toolbar com o NavController
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+        // Atualizar o título da Toolbar com base no Fragment atual
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (getSupportActionBar() != null) {
+                // Pega o label definido no arquivo de navegação
+                getSupportActionBar().setTitle(destination.getLabel());
             }
         });
-        DrawerLayout drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView;
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
-                .setOpenableLayout(drawer)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+
+        // Habilitar o botão "up"
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        // Definir o clique do botão "up"
+        toolbar.setNavigationOnClickListener(v -> {
+            NavController navControllerMain = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+
+                int idMain = navControllerMain.getCurrentDestination().getId();
+            if (idMain == R.id.loginFragment) {
+                finish();
+
+            }else if (idMain == R.id.nav_ClienteNovo) {
+                Intent intent = new Intent(MainActivity.this, SecundaryActivity.class);
+                intent.putExtra("fragment", "Cliente");
+                startActivity(intent);
+                MainActivity.this.finish();
+            }else if (idMain == R.id.nav_ClienteAlterar) {
+                Intent intent = new Intent(MainActivity.this, SecundaryActivity.class);
+                intent.putExtra("fragment", "Cliente");
+                startActivity(intent);
+                MainActivity.this.finish();
+            }else if (idMain == R.id.nav_FornecedorNovo) {
+                Intent intent = new Intent(MainActivity.this, SecundaryActivity.class);
+                intent.putExtra("fragment", "Fornecedor");
+                startActivity(intent);
+                MainActivity.this.finish();
+            }else if (idMain == R.id.nav_FornecedorAlterar) {
+                Intent intent = new Intent(MainActivity.this, SecundaryActivity.class);
+                intent.putExtra("fragment", "Fornecedor");
+                startActivity(intent);
+                MainActivity.this.finish();
+            }
+            Log.d("MainActivity", "UP FUNCIONOU");
+        });
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("fragment")) {
+            String fragment = intent.getStringExtra("fragment");
+            if("ClienteNovo".equals(fragment)){
+                NavController navControllerMain = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+                navControllerMain.navigate(R.id.nav_ClienteNovo);
+            }
+            if("ClienteAlterar".equals(fragment)){
+                NavController navControllerMain = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+                navControllerMain.navigate(R.id.nav_ClienteAlterar);
+            }
+            if("FornecedorNovo".equals(fragment)){
+                NavController navControllerMain = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+                navControllerMain.navigate(R.id.nav_FornecedorNovo);
+            }
+            if("FornecedorAlterar".equals(fragment)){
+                NavController navControllerMain = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+                navControllerMain.navigate(R.id.nav_FornecedorAlterar);
+            }
+
+        }
     }
 
     @Override
@@ -57,10 +114,4 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
 }

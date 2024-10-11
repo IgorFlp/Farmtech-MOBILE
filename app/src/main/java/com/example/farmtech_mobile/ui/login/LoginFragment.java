@@ -1,15 +1,24 @@
 package com.example.farmtech_mobile.ui.login;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +29,15 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
+import com.example.farmtech_mobile.SecundaryActivity;
+import com.example.farmtech_mobile.databinding.ActivityMainBinding;
 import com.example.farmtech_mobile.databinding.FragmentLoginBinding;
 
 import com.example.farmtech_mobile.R;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.gson.Gson;
 
 public class LoginFragment extends Fragment {
 
@@ -34,22 +48,26 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+                             @Nullable Bundle savedInstanceState){
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
-        final Button loginButton = binding.login;
+        final Button loginButton = binding.btnEntrar;
         final ProgressBar loadingProgressBar = binding.loading;
 
         loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), new Observer<LoginFormState>() {
@@ -115,14 +133,47 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        /*loginButton.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
+
+                // Observa o resultado do login
+                loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), usuario -> {
+                    if (usuario != null) {
+                        // Login bem-sucedido, redirecionar para a tela de Home
+                        loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), loginResult -> {
+                            if (loginResult == null) {
+                                return;
+                            }
+
+                            if (loginResult.getError() != null) {
+                                // Exibe mensagem de erro
+                                Toast.makeText(getContext(), getString(loginResult.getError()), Toast.LENGTH_SHORT).show();
+                            }
+
+                            if (loginResult.getSuccess() != null) {
+                                // Sucesso no login, redirecionar para a tela de Home
+                                LoggedInUserView loggedInUser = loginResult.getSuccess();
+                                Toast.makeText(getContext(), "Bem-vindo " + loggedInUser.getDisplayName(), Toast.LENGTH_LONG).show();
+                                /*
+                                // Aqui você realiza a navegação para o fragmento Home
+                                NavController navController = Navigation.findNavController(view);
+                                navController.navigate(R.id.action_loginFragment_to_nav_home);
+                                */
+                                Intent intent = new Intent(getActivity(), SecundaryActivity.class);
+                                intent.putExtra("fragment_name", "HomeFragment");
+                                startActivity(intent);
+                                getActivity().finish();
+                            }
+
+                        });
+                    }
+                });
             }
-        });*/
+        });
 
     }
 

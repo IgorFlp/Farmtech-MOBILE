@@ -13,3 +13,11 @@
 .externalNativeBuild
 .cxx
 local.properties
+# Folders
+**/bin/
+**/obj/
+
+# Files
+*.user
+*.suo
+*.csproj.user
