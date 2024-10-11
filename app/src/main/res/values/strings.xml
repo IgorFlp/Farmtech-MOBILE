@@ -168,6 +168,11 @@
         <item> </item>
 
     </string-array>
+    <string-array name="unidade_spinner">
+        <item> </item>
+        <item>Kg</item>
+        <item>Un</item>
+    </string-array>
     <string-array name="cargo_spinner">
         <item> </item>
         <item>Estoquista</item>

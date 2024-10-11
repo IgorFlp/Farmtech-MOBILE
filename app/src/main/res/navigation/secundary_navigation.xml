@@ -35,5 +35,10 @@
         android:name="com.example.farmtech_mobile.ui.usuarios.UsuarioFragment"
         android:label="Usuarios"
         tools:layout="@layout/fragment_usuario" />
+    <fragment
+        android:id="@+id/nav_produto"
+        android:name="com.example.farmtech_mobile.ui.produto.ProdutoFragment"
+        android:label="Produtos"
+        tools:layout="@layout/fragment_produto" />
 
 </navigation>

@@ -12,8 +12,11 @@ import retrofit2.http.Query;
 import java.util.List;
 import com.example.farmtech_mobile.data.model.Cliente;
 import com.example.farmtech_mobile.data.model.ClienteEndereco;
+import com.example.farmtech_mobile.data.model.Estoque;
 import com.example.farmtech_mobile.data.model.Fornecedor;
 import com.example.farmtech_mobile.data.model.FornecedorEndereco;
+import com.example.farmtech_mobile.data.model.Producao;
+import com.example.farmtech_mobile.data.model.Produto;
 import com.example.farmtech_mobile.data.model.Usuario;
 
 
@@ -107,4 +110,53 @@ public interface ApiService {
     @DELETE("Usuario/{id}")
     Call<Usuario> deleteUsuario(@Path("id") Integer id);
 
+    //PRODUTO
+    @GET("Produto")
+    Call<List<Produto>> getProdutos();
+
+    @GET("Produto/{id}")
+    Call<Produto> getProduto(@Path("id") Integer id);
+
+    @POST("Produto")
+    Call<Produto> criarProduto(@Body Produto produto);
+
+    @PUT("Produto/{id}")
+    Call<Produto> atualizarProduto(@Path("id") Integer id,@Body Produto produto);
+
+    @DELETE("Produto/{id}")
+    Call<Produto> deleteProduto(@Path("id") Integer id);
+
+    //ESTOQUE
+    @GET("Estoque")
+    Call<List<Estoque>> getEstoques();
+
+    @GET("Estoque/{id}")
+    Call<Estoque> getEstoque(@Path("id") Integer id);
+
+    @POST("Estoque")
+    Call<Estoque> criarEstoque(@Body Estoque estoque);
+
+    @PUT("Estoque/{id}")
+    Call<Estoque> atualizarEstoque(@Path("id") Integer id,@Body Estoque estoque);
+
+    @DELETE("Estoque/{id}")
+    Call<Estoque> deleteEstoque(@Path("id") Integer id);
+
+    //PRODUTOÇÃO
+    /*
+    @GET("Producao")
+    Call<List<Producao>> getProducoes();
+
+    @GET("Producao/{id}")
+    Call<Producao> getProducao(@Path("id") Integer id);
+    */
+    @POST("Producao")
+    Call<Producao> criarProducao(@Body Producao producao);
+    /*
+    @PUT("Produto/{id}")
+    Call<Producao> atualizarProducao(@Path("id") Integer id,@Body Producao producao);
+
+    @DELETE("Producao/{id}")
+    Call<Producao> deleteProducao(@Path("id") Integer id);
+    */
 }

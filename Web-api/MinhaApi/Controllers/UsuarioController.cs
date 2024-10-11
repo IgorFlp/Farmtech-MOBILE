@@ -58,7 +58,8 @@ public class UsuarioController : ControllerBase
 		_context.Usuarios.Add(usuario);
 		await _context.SaveChangesAsync();
 
-		return CreatedAtAction(nameof(GetUsuarios), new { login = usuario.Login }, usuario);
+		return Ok(usuario);
+		//return CreatedAtAction(nameof(GetUsuarios), new { login = usuario.Login }, usuario);
 	}
 
 	// PUT: api/Usuario/5

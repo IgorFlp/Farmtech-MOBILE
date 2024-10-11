@@ -26,6 +26,10 @@
             android:id="@+id/nav_usuario"
             android:icon="@mipmap/usuario_foreground"
             android:title="Usuario" />
+        <item
+            android:id="@+id/nav_produto"
+            android:icon="@mipmap/produto_foreground"
+            android:title="Produto" />
 
     </group>
     <group >
