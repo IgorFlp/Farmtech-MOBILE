@@ -5,11 +5,10 @@ import java.util.List;
 
 public class Producao {
     private int id;
-    private Date dataProd;
-    private List<Estoque> estoques;
-    public Producao(Date dataProd, List<Estoque> estoques) {
+    private String dataProd;
+
+    public Producao(String dataProd) {
         this.dataProd = dataProd;
-        this.estoques = estoques;
     }
     public int getId() {
         return id;
@@ -18,19 +17,11 @@ public class Producao {
         this.id = id;
     }
 
-    public Date getDataProd() {
+    public String getDataProd() {
         return dataProd;
     }
 
-    public void setDataProd(Date dataProd) {
+    public void setDataProd(String dataProd) {
         this.dataProd = dataProd;
-    }
-
-    public List<Estoque> getEstoques() {
-        return estoques;
-    }
-
-    public void setEstoques(List<Estoque> estoques) {
-        this.estoques = estoques;
     }
 }

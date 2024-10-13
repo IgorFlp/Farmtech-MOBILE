@@ -1,9 +1,11 @@
 package com.example.farmtech_mobile.data.model;
 
+import java.math.BigDecimal;
+
 public class Estoque {
     private int pdtId;
-    private double quantidade;
-    public Estoque(int pdtId, double quantidade) {
+    private BigDecimal quantidade;
+    public Estoque(int pdtId, BigDecimal quantidade) {
         this.pdtId = pdtId;
         this.quantidade = quantidade;
     }
@@ -15,11 +17,11 @@ public class Estoque {
         this.pdtId = pdtId;
     }
 
-    public double getQuantidade() {
+    public BigDecimal getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(double quantidade) {
+    public void setQuantidade(BigDecimal quantidade) {
         this.quantidade = quantidade;
     }
 }

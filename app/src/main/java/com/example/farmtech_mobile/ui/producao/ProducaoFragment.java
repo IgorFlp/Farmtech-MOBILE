@@ -36,6 +36,7 @@ import com.example.farmtech_mobile.api.ApiService;
 import com.example.farmtech_mobile.api.RetrofitClient;
 import com.example.farmtech_mobile.data.model.Estoque;
 import com.example.farmtech_mobile.data.model.Producao;
+import com.example.farmtech_mobile.data.model.ProducaoProdutos;
 import com.example.farmtech_mobile.data.model.Produto;
 import com.example.farmtech_mobile.data.model.SpinnerItem;
 import com.example.farmtech_mobile.databinding.FragmentProducaoBinding;
@@ -44,6 +45,8 @@ import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +54,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.function.BiFunction;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -235,7 +239,7 @@ public class ProducaoFragment extends Fragment {
 
                     Integer idProduto = lblProduto.getId();
                     String quantString = lblQuant.getText().toString().replaceAll("[^\\d.]", "");
-                    double quantProd = Double.parseDouble(quantString);
+                    BigDecimal quantProd = BigDecimal.valueOf(Double.parseDouble(quantString));
                     Estoque estoque = new Estoque(idProduto,quantProd);
                     Log.d("ProducaoFragment", "ProdutoId e Quant: "+ estoque.getPdtId() +" - "+ estoque.getQuantidade());
                     estoques.add(estoque);
@@ -244,19 +248,86 @@ public class ProducaoFragment extends Fragment {
                 Date dataAtual = calendar.getTime();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String dataFormatada = sdf.format(dataAtual);
-                Producao producao = new Producao(dataAtual,estoques);
+
+                Producao producao = new Producao(dataFormatada);
+
+                Log.d("ProducaoFragment", "data "+dataFormatada);
+                String json = new Gson().toJson(producao);
+                Log.d("ProducaoFragment", "Produção: "+json);
 
                 //Invocar criar produção com a dataFormadata e ID gerado automaticamente
                 Call<Producao> criarProducao = apiService.criarProducao(producao);
                 criarProducao.enqueue(new Callback<Producao>() {
                     @Override
                     public void onResponse(Call<Producao> call, Response<Producao> response) {
+                        Log.d("ProducaoFragment", "Entrou no onResponse");
+
                         if (response.isSuccessful()){
-                            Log.d("ProducaoFragment", "Producao criada com sucesso"+response.body());
+                            Producao producao = response.body();
+                            String json = new Gson().toJson(producao);
+                            Log.d("ProducaoFragment", "Producao criada com sucesso"+json);
+
+
+                            //Invocar criar produção_produtos com pdt_id e quant da lista estoques
+                            // e pdc_id(gerado pela call anterior)
+                            for(Estoque estoque : estoques){
+                                ProducaoProdutos producaoProdutos = new ProducaoProdutos(producao.getId(), estoque.getPdtId(),estoque.getQuantidade());
+                                Call<ProducaoProdutos> criarProducaoProdutos = apiService.criarProducaoProdutos(producaoProdutos);
+                                criarProducaoProdutos.enqueue(new Callback<ProducaoProdutos>() {
+                                    @Override
+                                    public void onResponse(Call<ProducaoProdutos> call, Response<ProducaoProdutos> response) {
+                                        if(response.isSuccessful()){
+                                            Log.d("ProducaoFragment", "ProducaoProdutos criada com sucesso");
+                                            //Invocar AdicionarEstoque com pdt_id e quant da lista estoques.
+                                            Log.d("ProducaoFragment", "Estoque id e quant"+estoque.getPdtId()+"-"+estoque.getQuantidade());
+                                            Call<Void> adicionarEstoque = apiService.adicionarEstoque(estoque.getPdtId(),estoque.getQuantidade());
+                                            adicionarEstoque.enqueue(new Callback<Void>() {
+                                                @Override
+                                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                                    if(response.isSuccessful()){
+                                                        Log.d("ProducaoFragment", "Estoque atualizado com sucesso");
+                                                        new AlertDialog.Builder(getContext())
+                                                                .setTitle("Cadastro de produção")
+                                                                .setMessage("Produção registrada com sucesso!")
+                                                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                        NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment_content_secundary);
+                                                                        navController.navigate(R.id.nav_producao);
+                                                                    }
+                                                                })
+                                                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                                                .show();
+                                                    }else{
+                                                        try {
+                                                            // Log do código de erro, headers e o corpo do erro
+                                                            Log.d("ProducaoFragment", "Estoque não atualizado. Código: " + response.code() +
+                                                                    " /// Headers: " + response.headers() +
+                                                                    " /// Erro: " + response.errorBody().string());
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                }
+                                                @Override
+                                                public void onFailure(Call<Void> call, Throwable t) {
+                                                    Log.d("ProducaoFragment", "Erro call: "+t.getMessage());
+                                                }
+                                            });
+                                        }else{
+                                            Log.d("ProducaoFragment", "ProducaoProdutos não criada");
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<ProducaoProdutos> call, Throwable t) {
+                                        Log.d("ProducaoFragment", "Erro call: "+t.getMessage());
+                                    }
+                                });
+                            }
+
+                        }else{
+                            Log.d("ProducaoFragment", "Response não retornou sucessful");
+                            Log.d("ProducaoFragment", "Response: "+response.body());
                         }
-                        //Invocar criar produção_produtos com pdt_id e quant da lista estoques
-                        // e pdc_id(gerado pela call anterior)
-                        //Invocar SubtrairEstoque com pdt_id e quant da lista estoques.
                     }
                     @Override
                     public void onFailure(Call<Producao> call, Throwable t) {

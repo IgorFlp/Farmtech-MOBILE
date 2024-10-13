@@ -9,13 +9,17 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import com.example.farmtech_mobile.data.model.Cliente;
 import com.example.farmtech_mobile.data.model.ClienteEndereco;
+import com.example.farmtech_mobile.data.model.Cupom;
 import com.example.farmtech_mobile.data.model.Estoque;
 import com.example.farmtech_mobile.data.model.Fornecedor;
 import com.example.farmtech_mobile.data.model.FornecedorEndereco;
 import com.example.farmtech_mobile.data.model.Producao;
+import com.example.farmtech_mobile.data.model.ProducaoProdutos;
 import com.example.farmtech_mobile.data.model.Produto;
 import com.example.farmtech_mobile.data.model.Usuario;
 
@@ -142,7 +146,10 @@ public interface ApiService {
     @DELETE("Estoque/{id}")
     Call<Estoque> deleteEstoque(@Path("id") Integer id);
 
-    //PRODUTOÇÃO
+    @PUT("Estoque/Adicionar/{id}")
+    Call<Void> adicionarEstoque(@Path("id") int id, @Query("quantidade") BigDecimal quantidade);
+
+    //PRODUÇÃO
     /*
     @GET("Producao")
     Call<List<Producao>> getProducoes();
@@ -159,4 +166,11 @@ public interface ApiService {
     @DELETE("Producao/{id}")
     Call<Producao> deleteProducao(@Path("id") Integer id);
     */
+    //PRODUCAO PRODUTOS
+    @POST("ProducaoProdutos")
+    Call<ProducaoProdutos> criarProducaoProdutos(@Body ProducaoProdutos producaoProdutos);
+
+    //CUPOM
+    @GET("Cupom/{nome}")
+    Call<Cupom> buscarCupom(@Path("nome") String nome);
 }
