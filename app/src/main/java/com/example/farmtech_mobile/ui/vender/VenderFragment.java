@@ -1,8 +1,11 @@
 package com.example.farmtech_mobile.ui.vender;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -35,12 +38,14 @@ import com.example.farmtech_mobile.api.RetrofitClient;
 import com.example.farmtech_mobile.data.model.Cliente;
 import com.example.farmtech_mobile.data.model.Cupom;
 import com.example.farmtech_mobile.data.model.Estoque;
+import com.example.farmtech_mobile.data.model.LoggedInUser;
 import com.example.farmtech_mobile.data.model.Venda;
 import com.example.farmtech_mobile.data.model.VendaProdutos;
 import com.example.farmtech_mobile.data.model.Produto;
 import com.example.farmtech_mobile.data.model.SpinnerItem;
 import com.example.farmtech_mobile.databinding.FragmentVenderBinding;
 import com.example.farmtech_mobile.databinding.FragmentVenderBinding;
+import com.example.farmtech_mobile.ui.login.LoginViewModel;
 import com.example.farmtech_mobile.ui.vender.VenderFragment;
 import com.google.gson.Gson;
 
@@ -57,10 +62,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
+
 public class VenderFragment extends Fragment {
 
     private FragmentVenderBinding binding;
     final private ApiService apiService = RetrofitClient.getApiService();
+    private LoginViewModel loginViewModel;
 
     public static VenderFragment newInstance() {
         return new VenderFragment();
@@ -74,6 +82,7 @@ public class VenderFragment extends Fragment {
         return binding.getRoot();
 
     }
+
     private int dpToPx(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }
@@ -81,8 +90,21 @@ public class VenderFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Context context = getActivity();
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String loggedUserName = sharedPreferences.getString("loggedUserName", "Usuário não encontrado");
+        String loggedUserId = sharedPreferences.getString("loggedUserId", "Usuário não encontrado");
+
+        int[] userid = new int[1];
+        userid[0] = Integer.parseInt(loggedUserId);
+
+        Log.d("VenderFragment", "Usuario id e nome"+loggedUserId+" - "+loggedUserName);
+
+
         List<Estoque> estoques = new ArrayList<>();
         List<BigDecimal> totaisProdutos = new ArrayList<>();
+
+
         BigDecimal[] subtotal = {BigDecimal.ZERO};
         BigDecimal[] frete = {BigDecimal.ZERO};
         BigDecimal[] desconto = {BigDecimal.ZERO};
@@ -101,6 +123,7 @@ public class VenderFragment extends Fragment {
         TextView lblFrete = binding.lblFrete;
         TextView lblDesconto = binding.lblDesconto;
         TextView lblTotal = binding.lblTotal;
+        TextView lblUsuario = binding.lblUsuario;
 
         Spinner slcProduto = binding.slcProduto;
         Spinner slcCliente = binding.slcCliente;
@@ -117,6 +140,11 @@ public class VenderFragment extends Fragment {
         Button btnBuscarCupom = binding.btnBuscarCupom;
 
         LinearLayout vendaLista = binding.vendaLista;
+
+        lblUsuario.setText(loggedUserName);
+        lblUsuario.setTag(loggedUserId);
+        Log.d("VenderFragment", "Usuario loggedin id e nome"+loggedUserId+" - "+loggedUserName);
+        Log.d("VenderFragment", "Usuario label id e nome"+lblUsuario.getTag().toString()+" - "+lblUsuario.getText().toString());
 
         btnNovoProduto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,7 +274,11 @@ public class VenderFragment extends Fragment {
                         LinearLayout.LayoutParams.WRAP_CONTENT);
                 lblTotalProdParams.setMargins(dpToPx(20), 0, 0, 0);
                 lblTotalProd.setLayoutParams(lblTotalProdParams);
-                double totalProd = produtoSelecionado[0].getPrecoUn() * Double.parseDouble(txtQuant.getText().toString());
+
+                double preco = produtoSelecionado[0].getPrecoUn();
+                String precoString = String.valueOf(preco).replace(",",".");
+                double totalProd = Double.parseDouble(precoString) * Double.parseDouble(txtQuant.getText().toString());
+
                 lblTotalProd.setText(String.format("%.2f", totalProd));
                 lblTotalProd.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                 lblTotalProd.setTextColor(Color.parseColor("#242424"));
@@ -305,62 +337,68 @@ public class VenderFragment extends Fragment {
                     Estoque estoque = new Estoque(id,quant);
                     estoques.add(estoque);
                 }
+                Gson gson = new Gson();
+                String json = gson.toJson(estoques);
+                Log.d("VendaFragment", "Estoques "+json);
+
+                Spinner slcCliente = binding.slcCliente;
+                SpinnerItem selectedItem = (SpinnerItem) slcCliente.getSelectedItem();
+                String cpf = selectedItem.getArg1();
+                Log.d("VenderFragment", "CPF do cliente selecionado: " + cpf);
+
+                Calendar calendar = Calendar.getInstance();
+                Date dataAtual = calendar.getTime();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String dataFormatada = dateFormat.format(dataAtual);
+                Log.d("VenderFragment", "Data atual: " + dataFormatada);
+
                 //lblProduto tag: lblProduto text: nome do produto id: Id do produto
                 //lblQuant tag: produtoQuantLabel text: quantidade do produto + UnMedida
                 //lblTotalProd tag: produtoTotalLabel  text: total do produto 0.00
-                /*
-                Venda venda = new Venda(lblSubtotal.getText().toString(),dataFormatada);
-
-                Log.d("VendaFragment", "data "+dataFormatada);
-                String json = new Gson().toJson(venda);
-                Log.d("VendaFragment", "Produção: "+json);
-
-                //Invocar criar produção com a dataFormadata e ID gerado automaticamente
+                Log.d("VenderFragment", "Usuario id arr: "+userid[0]);
+                int userId = userid[0];
+                Log.d("VenderFragment", "Usuario id: "+userId);
+                Venda venda = new Venda(
+                        BigDecimal.valueOf(Double.parseDouble(lblSubtotal.getText().toString().replaceAll("[^\\d.]", ""))),
+                        BigDecimal.valueOf(Double.parseDouble(lblFrete.getText().toString().replaceAll("[^\\d.]", ""))),
+                        BigDecimal.valueOf(Double.parseDouble(lblDesconto.getText().toString().replaceAll("[^\\d.]", ""))),
+                        BigDecimal.valueOf(Double.parseDouble(lblTotal.getText().toString().replaceAll("[^\\d.]", ""))),
+                        txtCupom.getText().toString().toUpperCase(),
+                        slcMtdPagto.getSelectedItem().toString(),
+                        cpf,dataFormatada,
+                        slcEntrega.getSelectedItem().toString(),
+                        userid[0]
+                        );
+                Log.d("VenderFragment", "Venda objeto: "+ new Gson().toJson(venda));
                 Call<Venda> criarVenda = apiService.criarVenda(venda);
                 criarVenda.enqueue(new Callback<Venda>() {
                     @Override
                     public void onResponse(Call<Venda> call, Response<Venda> response) {
-                        Log.d("VendaFragment", "Entrou no onResponse");
-
-                        if (response.isSuccessful()){
+                        if (response.isSuccessful()) {
                             Venda venda = response.body();
-                            String json = new Gson().toJson(venda);
-                            Log.d("VendaFragment", "Venda criada com sucesso"+json);
-
-
-                            //Invocar criar produção_produtos com pdt_id e quant da lista estoques
-                            // e pdc_id(gerado pela call anterior)
+                            Log.d("VenderFragment", "Venda response: " + new Gson().toJson(venda));
                             for(Estoque estoque : estoques){
-                                VendaProdutos vendaProdutos = new VendaProdutos(venda.getId(), estoque.getPdtId(),estoque.getQuantidade());
-                                Call<VendaProdutos> criarVendaProdutos = apiService.criarVendaProdutos(vendaProdutos);
-                                criarVendaProdutos.enqueue(new Callback<VendaProdutos>() {
+                                VendaProdutos vendaProduto = new VendaProdutos(venda.getId(),estoque.getPdtId(),estoque.getQuantidade());
+                                Call<VendaProdutos> criarVendaProduto = apiService.criarVendaProduto(vendaProduto);
+                                Log.d("VenderFragment", "VendaProduto objeto: "+ new Gson().toJson(vendaProduto));
+                                criarVendaProduto.enqueue(new Callback<VendaProdutos>() {
                                     @Override
                                     public void onResponse(Call<VendaProdutos> call, Response<VendaProdutos> response) {
-                                        if(response.isSuccessful()){
-                                            Log.d("VendaFragment", "VendaProdutos criada com sucesso");
-                                            //Invocar AdicionarEstoque com pdt_id e quant da lista estoques.
-                                            Log.d("VendaFragment", "Estoque id e quant"+estoque.getPdtId()+"-"+estoque.getQuantidade());
-                                            Call<Void> adicionarEstoque = apiService.adicionarEstoque(estoque.getPdtId(),estoque.getQuantidade());
-                                            adicionarEstoque.enqueue(new Callback<Void>() {
+                                        if (response.isSuccessful()) {
+                                            VendaProdutos vendaProdutos = response.body();
+                                            String json2 = new Gson().toJson(vendaProdutos);
+                                            Log.d("VenderFragment", "vendaProdutos: "+ json2);
+
+                                            Call<Void> subtrairEstoque = apiService.subtrairEstoque(estoque.getPdtId(),estoque.getQuantidade());
+                                            subtrairEstoque.enqueue(new Callback<Void>() {
                                                 @Override
                                                 public void onResponse(Call<Void> call, Response<Void> response) {
                                                     if(response.isSuccessful()){
-                                                        Log.d("VendaFragment", "Estoque atualizado com sucesso");
-                                                        new AlertDialog.Builder(getContext())
-                                                                .setTitle("Cadastro de produção")
-                                                                .setMessage("Produção registrada com sucesso!")
-                                                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                                                    public void onClick(DialogInterface dialog, int which) {
-                                                                        NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment_content_secundary);
-                                                                        navController.navigate(R.id.nav_venda);
-                                                                    }
-                                                                })
-                                                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                                                .show();
+                                                        Log.d("ProducaoFragment", "Estoque atualizado com sucesso");
                                                     }else{
                                                         try {
                                                             // Log do código de erro, headers e o corpo do erro
-                                                            Log.d("VendaFragment", "Estoque não atualizado. Código: " + response.code() +
+                                                            Log.d("ProducaoFragment", "Estoque não atualizado. Código: " + response.code() +
                                                                     " /// Headers: " + response.headers() +
                                                                     " /// Erro: " + response.errorBody().string());
                                                         } catch (IOException e) {
@@ -370,41 +408,50 @@ public class VenderFragment extends Fragment {
                                                 }
                                                 @Override
                                                 public void onFailure(Call<Void> call, Throwable t) {
-                                                    Log.d("VendaFragment", "Erro call: "+t.getMessage());
+                                                    Log.d("ProducaoFragment", "Erro call: "+t.getMessage());
                                                 }
                                             });
-                                        }else{
-                                            Log.d("VendaFragment", "VendaProdutos não criada");
+
                                         }
                                     }
+
                                     @Override
                                     public void onFailure(Call<VendaProdutos> call, Throwable t) {
-                                        Log.d("VendaFragment", "Erro call: "+t.getMessage());
+                                        Log.d("VenderFragment", "onFailure Erro: " + t.getMessage());
                                     }
                                 });
                             }
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle("Cadastro de vendas")
+                                    .setMessage("Venda registrada com sucesso!")
+                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment_content_secundary);
+                                            navController.navigate(R.id.nav_vender  );
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
 
-                        }else{
-                            Log.d("VendaFragment", "Response não retornou sucessful");
-                            Log.d("VendaFragment", "Response: "+response.body());
                         }
                     }
                     @Override
                     public void onFailure(Call<Venda> call, Throwable t) {
-                        Log.d("VendaFragment", "Erro venda call: "+t.getMessage());
+                        Log.d("VenderFragment", "onFailure Erro: "+t.getMessage());
                     }
                 });
-            }*/
+
         }});
         slcEntrega.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SpinnerItem selectedItem = (SpinnerItem) slcEntrega.getSelectedItem();
-                String selectedText = selectedItem.getText();
-                if(selectedText.equals("Retirada")){
-                    binding.lblFrete.setText("R$ 00.00");
-                }else{
+                String selectedItem = (String) slcEntrega.getSelectedItem();
+                //String selectedText = selectedItem.getText().toString();
+                if(selectedItem.equals("Entrega")){
                     binding.lblFrete.setText("R$ 25.00");
+                    calcSubTotal();
+                }else{
+                    binding.lblFrete.setText("R$ 00.00");
                 }
             }
 
@@ -452,7 +499,7 @@ public class VenderFragment extends Fragment {
                     if(res < 0 ){
                         Log.d("VenderFragment", "Cupom valido");
                         cupomContainer.setBackgroundResource(R.drawable.borda_sucesso_background);
-                        binding.lblDesconto.setText(String.format("%.2f",cupom.getValor()));
+                        binding.lblDesconto.setText(String.format("%.2f",cupom.getValor()).replace(",","."));
                         calcTotal();
 
                     }else{
@@ -485,28 +532,29 @@ public class VenderFragment extends Fragment {
             LinearLayout row = container.findViewWithTag("vendaRow");
             TextView lblTotal = (TextView) row.findViewWithTag("produtoTotalLabel");
 
-        BigDecimal totalProd = BigDecimal.valueOf(Double.parseDouble(lblTotal.getText().toString()));
+        BigDecimal totalProd = BigDecimal.valueOf(Double.parseDouble(lblTotal.getText().toString().replace(",",".")));
         Log.d("VendaFragment", "Total do produto: "+totalProd);
         totaisProdutos.add(totalProd);
         subtotal = subtotal.add(totalProd);
         Log.d("VendaFragment", "Subtotal: "+String.format("%.2f", subtotal));
         }
-        lblSubtotal.setText(String.format("R$ %.2f", subtotal));
+        lblSubtotal.setText(String.format("R$ %.2f", subtotal).replace(",","."));
         calcTotal();
     }
     private void calcTotal(){
-        BigDecimal subtotal = BigDecimal.valueOf(Double.parseDouble(binding.lblSubtotal.getText().toString().replaceAll("[^\\d.]", "")));
-        BigDecimal frete = BigDecimal.valueOf(Double.parseDouble(binding.lblFrete.getText().toString().replaceAll("[^\\d.]", "")));
-        BigDecimal desconto = BigDecimal.valueOf(Double.parseDouble(binding.lblDesconto.getText().toString().replaceAll("[^\\d.]", "")));
+
+        BigDecimal subtotal = BigDecimal.valueOf(Double.parseDouble(binding.lblSubtotal.getText().toString().replaceAll("[^\\d.,]", "").replace(",",".")));
+        BigDecimal frete = BigDecimal.valueOf(Double.parseDouble(binding.lblFrete.getText().toString().replaceAll("[^\\d.,]", "").replace(",",".")));
+        BigDecimal desconto = BigDecimal.valueOf(Double.parseDouble(binding.lblDesconto.getText().toString().replaceAll("[^\\d.,]", "").replace(",",".")));
         BigDecimal total = subtotal.add(frete).subtract(desconto);
-        binding.lblTotal.setText(String.format("R$ %.2f", total));
+        binding.lblTotal.setText(String.format("R$ %.2f", total).replace(",","."));
          }
 
     private List<Produto> criaProdutos(Spinner slcProduto, View v) {
+        List<SpinnerItem> spinnerProdutos = new ArrayList<>();
         Spinner spinner = v.findViewById(R.id.slcProduto);
         Context context = spinner.getContext();
 
-        List<SpinnerItem> spinnerItems = new ArrayList<>();
         List<Produto> produtosList = new ArrayList<>();
 
         Call<List<Produto>> call = apiService.getProdutos();
@@ -517,11 +565,11 @@ public class VenderFragment extends Fragment {
                 if(response.isSuccessful()){
                     produtos = response.body();
                     for (Produto produto : produtos) {
-                        spinnerItems.add(new SpinnerItem(produto.getNome(), String.valueOf(produto.getId()),produto.getUnMedida()));
+                        spinnerProdutos.add(new SpinnerItem(produto.getNome(), String.valueOf(produto.getId()),produto.getUnMedida()));
                         produtosList.add(produto);
                     }
 
-                    ArrayAdapter<SpinnerItem> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, spinnerItems);
+                    ArrayAdapter<SpinnerItem> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, spinnerProdutos);
 
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -537,10 +585,10 @@ public class VenderFragment extends Fragment {
         return produtosList;
     }
     private void criaClientes(Spinner slcCliente, View v) {
+
         Spinner spinner = v.findViewById(R.id.slcCliente);
         Context context = spinner.getContext();
-
-        List<SpinnerItem> spinnerItems = new ArrayList<>();
+        List<SpinnerItem> spinnerClientes = new ArrayList<>();
 
         Call<List<Cliente>> call = apiService.getClientes();
         call.enqueue(new Callback<List<Cliente>>() {
@@ -548,11 +596,13 @@ public class VenderFragment extends Fragment {
             public void onResponse(Call<List<Cliente>> call, Response<List<Cliente>> response) {
                 if(response.isSuccessful()){
                     List<Cliente> clientes = response.body();
+
                     for (Cliente cliente : clientes) {
-                        spinnerItems.add(new SpinnerItem(cliente.getNome(), cliente.getCpf(), cliente.getTelefone()));
+                        spinnerClientes.add(new SpinnerItem(cliente.getNome(), cliente.getCpf(), cliente.getTelefone()));
+
                     }
 
-                    ArrayAdapter<SpinnerItem> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, spinnerItems);
+                    ArrayAdapter<SpinnerItem> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, spinnerClientes);
 
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 

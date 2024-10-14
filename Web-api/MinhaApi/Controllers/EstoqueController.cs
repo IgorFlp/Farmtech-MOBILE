@@ -109,19 +109,20 @@ public class EstoqueController : ControllerBase
 
 		return NoContent();
 	}
-	// PUT: api/Estoque/Adicionar/5
+
+	// PUT: api/Estoque/Subtrair/5
 	[HttpPut("Subtrair/{pdt_id}")]
-	public async Task<IActionResult> SubtrairEstoque(int pdt_id, Estoque estoque)                
-	{
-		if (pdt_id != estoque.Pdt_id)
-		{
-			return BadRequest();
-		}
-
+	public async Task<IActionResult> SubtrairEstoque(int pdt_id, decimal quantidade)                
+	{	
+		
 		Estoque estoqueAtual = await _context.Estoques.FindAsync(pdt_id);
-
 		Estoque estoqueNovo = estoqueAtual;
-		estoqueNovo.Quant = estoqueAtual.Quant - estoque.Quant;
+		Console.WriteLine("Estoque Atual: "+estoqueAtual.Quant);
+		
+		estoqueNovo.Quant = estoqueAtual.Quant - quantidade;
+		Console.WriteLine("Estoque input: "+quantidade);
+				
+		Console.WriteLine("Estoque Novo: "+estoqueNovo.Quant);
 		
 		_context.Entry(estoqueNovo).State = EntityState.Modified;
 		try
@@ -142,7 +143,6 @@ public class EstoqueController : ControllerBase
 
 		return NoContent();
 	}
-
 
 	// DELETE: api/Estoque/5
 	[HttpDelete("{pdt_id}")]

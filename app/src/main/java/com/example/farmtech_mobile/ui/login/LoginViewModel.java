@@ -34,6 +34,7 @@ public class LoginViewModel extends ViewModel {
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
     private LoginRepository loginRepository;
 
+    private MutableLiveData<LoggedInUser> loggedInUser = new MutableLiveData<>();
     LoginViewModel(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;
     }
@@ -46,10 +47,15 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
+    // Método para obter os dados do usuário logado
+    public LiveData<LoggedInUser> getLoggedInUser() {
+        return loggedInUser;
+    }
+
 
     public void login(String username, String password) {
         // can be launched in a separate asynchronous job
-        //Result<LoggedInUser> result = loginRepository.login(username, password);
+
         ApiService apiService = RetrofitClient.getApiService();
         Usuario usuario = new Usuario(0,username,password,null,null);
         Call<Usuario> call = apiService.logar(username,password);
@@ -59,11 +65,11 @@ public class LoginViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     Log.d("LoginFragment", "Login efetuado com sucesso: " + response.body());
                     Usuario usuario = response.body();
-                    LoggedInUser  loggedInUser = new LoggedInUser(usuario.getLogin(), usuario.getNome());
+                    LoggedInUser  loggedInUser = new LoggedInUser(String.valueOf(usuario.getId()), usuario.getNome());
 
                     Result result = new Result.Success(usuario);
                     if (result instanceof Result.Success) {
-                        loginResult.setValue(new LoginResult(new LoggedInUserView(loggedInUser.getDisplayName())));
+                        loginResult.setValue(new LoginResult(new LoggedInUserView(loggedInUser.getUserId(),loggedInUser.getDisplayName())));
                     }
                 } else {
                     loginResult.setValue(new LoginResult(R.string.login_failed));

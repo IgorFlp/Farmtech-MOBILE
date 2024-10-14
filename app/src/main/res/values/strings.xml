@@ -174,14 +174,12 @@
         <item>Un</item>
     </string-array>
     <string-array name="entrega_spinner">
-        <item> </item>
-        <item>Entrega</item>
         <item>Retirada</item>
+        <item>Entrega</item>
     </string-array>
     <string-array name="pagto_spinner">
-        <item> </item>
-        <item>Boleto</item>
         <item>Crédito</item>
+        <item>Débito</item>
         <item>Dinheiro</item>
         <item>PIX</item>
     </string-array>

@@ -22,6 +22,8 @@ import com.example.farmtech_mobile.data.model.Producao;
 import com.example.farmtech_mobile.data.model.ProducaoProdutos;
 import com.example.farmtech_mobile.data.model.Produto;
 import com.example.farmtech_mobile.data.model.Usuario;
+import com.example.farmtech_mobile.data.model.Venda;
+import com.example.farmtech_mobile.data.model.VendaProdutos;
 
 
 public interface ApiService {
@@ -149,6 +151,9 @@ public interface ApiService {
     @PUT("Estoque/Adicionar/{id}")
     Call<Void> adicionarEstoque(@Path("id") int id, @Query("quantidade") BigDecimal quantidade);
 
+    @PUT("Estoque/Subtrair/{id}")
+    Call<Void> subtrairEstoque(@Path("id") int id, @Query("quantidade") BigDecimal quantidade);
+
     //PRODUÇÃO
     /*
     @GET("Producao")
@@ -173,4 +178,13 @@ public interface ApiService {
     //CUPOM
     @GET("Cupom/{nome}")
     Call<Cupom> buscarCupom(@Path("nome") String nome);
+
+    //VENDA
+    @POST("Venda")
+    Call<Venda> criarVenda(@Body Venda venda);
+
+
+    //VENDAPRODUTOS
+    @POST("VendaProdutos")
+    Call<VendaProdutos> criarVendaProduto(@Body VendaProdutos vendaProdutos);
 }

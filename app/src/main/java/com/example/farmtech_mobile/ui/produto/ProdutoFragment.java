@@ -347,7 +347,9 @@ public class ProdutoFragment extends Fragment {
                 if(modo[0].equals("Novo")){
                     Log.d("ProdutoFragment", "MODO NOVO");
                     String nome = txtNomeProduto.getText().toString();
-                    double precoUn = Double.parseDouble(txtPreco.getText().toString());
+
+
+                    double precoUn = Double.parseDouble(txtPreco.getText().toString().replace(",","."));
 
                     String unidade = slcUnidade.getSelectedItem().toString();
 

@@ -3,29 +3,29 @@ package com.example.farmtech_mobile.data.model;
 import java.math.BigDecimal;
 
 public class VendaProdutos {
-    private int vendaId;
-    private int pdtId;
+    private int ven_id;
+    private int pdt_id;
     private BigDecimal quant;
-    public VendaProdutos(int vendaId, int pdtId, BigDecimal quant) {
-        this.vendaId = vendaId;
-        this.pdtId = pdtId;
+    public VendaProdutos(int ven_id, int pdt_id, BigDecimal quant) {
+        this.ven_id  = ven_id;
+        this.pdt_id = pdt_id;
         this.quant = quant;
     }
 
-    public int getVendaId() {
-        return vendaId;
+    public int getVen_id() {
+        return ven_id;
     }
 
-    public void setVendaId(int vendaId) {
-        this.vendaId = vendaId;
+    public void setVen_id(int Ven_id) {
+        this.ven_id = Ven_id;
     }
 
-    public int getPdtId() {
-        return pdtId;
+    public int getPdt_id() {
+        return pdt_id;
     }
 
-    public void setPdtId(int pdtId) {
-        this.pdtId = pdtId;
+    public void setPdt_id(int pdt_id) {
+        this.pdt_id = pdt_id;
     }
 
     public BigDecimal getQuant() {

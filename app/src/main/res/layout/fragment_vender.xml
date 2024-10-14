@@ -492,7 +492,7 @@
                                     android:foreground="@mipmap/fotousuario_foreground" />
 
                                 <TextView
-                                    android:id="@+id/nomeUsuario"
+                                    android:id="@+id/lblUsuario"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"

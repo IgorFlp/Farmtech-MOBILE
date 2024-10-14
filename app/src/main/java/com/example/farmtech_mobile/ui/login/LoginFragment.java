@@ -1,5 +1,7 @@
 package com.example.farmtech_mobile.ui.login;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -15,6 +17,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -158,11 +161,13 @@ public class LoginFragment extends Fragment {
                                 // Sucesso no login, redirecionar para a tela de Home
                                 LoggedInUserView loggedInUser = loginResult.getSuccess();
                                 Toast.makeText(getContext(), "Bem-vindo " + loggedInUser.getDisplayName(), Toast.LENGTH_LONG).show();
-                                /*
-                                // Aqui você realiza a navegação para o fragmento Home
-                                NavController navController = Navigation.findNavController(view);
-                                navController.navigate(R.id.action_loginFragment_to_nav_home);
-                                */
+
+                                SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("loggedUserName", usuario.getSuccess().getDisplayName());  // "usuario.getNome()" obtém o nome do usuário logado
+                                editor.putString("loggedUserId", usuario.getSuccess().getDisplayId());
+                                editor.apply();
+
                                 Intent intent = new Intent(getActivity(), SecundaryActivity.class);
                                 intent.putExtra("fragment_name", "HomeFragment");
                                 startActivity(intent);
@@ -178,10 +183,21 @@ public class LoginFragment extends Fragment {
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
+        String welcome = "Bem vindo " + model.getDisplayName();
         // TODO : initiate successful logged in experience
         if (getContext() != null && getContext().getApplicationContext() != null) {
             Toast.makeText(getContext().getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("loggedUserName", model.getDisplayName());
+            editor.putString("loggedUserId", model.getDisplayId());
+            editor.apply();
+
+            Intent intent = new Intent(getActivity(), SecundaryActivity.class);
+            intent.putExtra("fragment_name", "HomeFragment");
+            startActivity(intent);
+            getActivity().finish();
         }
     }
 

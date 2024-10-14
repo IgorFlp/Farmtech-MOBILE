@@ -251,6 +251,7 @@ public class ProducaoFragment extends Fragment {
 
                 Producao producao = new Producao(dataFormatada);
 
+
                 Log.d("ProducaoFragment", "data "+dataFormatada);
                 String json = new Gson().toJson(producao);
                 Log.d("ProducaoFragment", "Produção: "+json);
@@ -286,18 +287,7 @@ public class ProducaoFragment extends Fragment {
                                                 public void onResponse(Call<Void> call, Response<Void> response) {
                                                     if(response.isSuccessful()){
                                                         Log.d("ProducaoFragment", "Estoque atualizado com sucesso");
-                                                        new AlertDialog.Builder(getContext())
-                                                                .setTitle("Cadastro de produção")
-                                                                .setMessage("Produção registrada com sucesso!")
-                                                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                                                    public void onClick(DialogInterface dialog, int which) {
-                                                                        NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment_content_secundary);
-                                                                        navController.navigate(R.id.nav_producao);
-                                                                    }
-                                                                })
-                                                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                                                .show();
-                                                    }else{
+                                                        }else{
                                                         try {
                                                             // Log do código de erro, headers e o corpo do erro
                                                             Log.d("ProducaoFragment", "Estoque não atualizado. Código: " + response.code() +
@@ -328,6 +318,17 @@ public class ProducaoFragment extends Fragment {
                             Log.d("ProducaoFragment", "Response não retornou sucessful");
                             Log.d("ProducaoFragment", "Response: "+response.body());
                         }
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Cadastro de produção")
+                                .setMessage("Produção registrada com sucesso!")
+                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment_content_secundary);
+                                        navController.navigate(R.id.nav_producao);
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
                     }
                     @Override
                     public void onFailure(Call<Producao> call, Throwable t) {

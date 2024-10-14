@@ -13,7 +13,7 @@ public class Venda {
     private String cl_cpf;
     private String dtVenda;
     private String entrega;
-    private int user_id;
+    private int usr_id;
 
     public Venda(BigDecimal subtotal, BigDecimal frete, BigDecimal desconto, BigDecimal total, String cupom, String mtdPagto, String cl_cpf, String dtVenda, String entrega, int user_id) {
         this.subtotal = subtotal;
@@ -25,7 +25,7 @@ public class Venda {
         this.cl_cpf = cl_cpf;
         this.dtVenda = dtVenda;
         this.entrega = entrega;
-        this.user_id = user_id;
+        this.usr_id = user_id;
     }
 
     public int getId() {
@@ -108,12 +108,12 @@ public class Venda {
         this.entrega = entrega;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getUsr_id() {
+        return usr_id;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUsr_id(int user_id) {
+        this.usr_id = user_id;
     }
 }
 
