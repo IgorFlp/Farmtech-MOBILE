@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 
 public class Estoque {
     private int pdtId;
-    private BigDecimal quantidade;
-    public Estoque(int pdtId, BigDecimal quantidade) {
+    private BigDecimal quant;
+    public Estoque(int pdtId, BigDecimal quant) {
         this.pdtId = pdtId;
-        this.quantidade = quantidade;
+        this.quant = quant;
     }
     public int getPdtId() {
         return pdtId;
@@ -17,11 +17,11 @@ public class Estoque {
         this.pdtId = pdtId;
     }
 
-    public BigDecimal getQuantidade() {
-        return quantidade;
+    public BigDecimal getQuant() {
+        return quant;
     }
 
-    public void setQuantidade(BigDecimal quantidade) {
-        this.quantidade = quantidade;
+    public void setQuant(BigDecimal quant) {
+        this.quant = quant;
     }
 }

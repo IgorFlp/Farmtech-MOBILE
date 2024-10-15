@@ -45,5 +45,9 @@
             android:id="@+id/nav_producao"
             android:icon="@mipmap/producao_foreground"
             android:title="Produção" />
+        <item
+            android:id="@+id/nav_relatorios"
+            android:icon="@mipmap/relatorios_foreground"
+            android:title="Relatórios" />
     </group>
 </menu>

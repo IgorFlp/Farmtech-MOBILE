@@ -137,7 +137,7 @@ public interface ApiService {
     Call<List<Estoque>> getEstoques();
 
     @GET("Estoque/{id}")
-    Call<Estoque> getEstoque(@Path("id") Integer id);
+    Call<Estoque> getEstoque(@Path("id") int id);
 
     @POST("Estoque")
     Call<Estoque> criarEstoque(@Body Estoque estoque);
@@ -155,10 +155,10 @@ public interface ApiService {
     Call<Void> subtrairEstoque(@Path("id") int id, @Query("quantidade") BigDecimal quantidade);
 
     //PRODUÇÃO
-    /*
+
     @GET("Producao")
     Call<List<Producao>> getProducoes();
-
+    /*
     @GET("Producao/{id}")
     Call<Producao> getProducao(@Path("id") Integer id);
     */
@@ -172,6 +172,8 @@ public interface ApiService {
     Call<Producao> deleteProducao(@Path("id") Integer id);
     */
     //PRODUCAO PRODUTOS
+    @GET("ProducaoProdutos")
+    Call<List<ProducaoProdutos>> getProducaoProdutos();
     @POST("ProducaoProdutos")
     Call<ProducaoProdutos> criarProducaoProdutos(@Body ProducaoProdutos producaoProdutos);
 
@@ -180,11 +182,15 @@ public interface ApiService {
     Call<Cupom> buscarCupom(@Path("nome") String nome);
 
     //VENDA
+    @GET("Venda")
+    Call<List<Venda>> getVendas();
     @POST("Venda")
     Call<Venda> criarVenda(@Body Venda venda);
 
 
     //VENDAPRODUTOS
+    @GET("VendaProdutos")
+    Call<List<VendaProdutos>> getVendaProdutos();
     @POST("VendaProdutos")
     Call<VendaProdutos> criarVendaProduto(@Body VendaProdutos vendaProdutos);
 }

@@ -14,6 +14,12 @@ public class VendaProdutosController : ControllerBase
 	{
 		_context = context;
 	} 
+	// GET: api/Vendas
+	[HttpGet]
+	public async Task<ActionResult<IEnumerable<VendaProdutos>>> GetVendaProdutos()
+	{
+		return await _context.VendaProdutos.ToListAsync();
+    }
 	// POST: api/VendaProdutos
 	[HttpPost]
 	public async Task<ActionResult<VendaProdutos>> PostVendaProdutos([FromBody] VendaProdutos vendaProdutos)

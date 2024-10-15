@@ -183,6 +183,16 @@
         <item>Dinheiro</item>
         <item>PIX</item>
     </string-array>
+    <string-array name="relatorios_spinner">
+        <item> </item>
+        <item>Vendas</item>
+        <item>Estoque</item>
+        <item>Produção</item>
+        <item>Clientes</item>
+        <item>Fornecedores</item>
+        <item>Produtos</item>
+        <item>Usuarios</item>
+    </string-array>
 
     <string-array name="cargo_spinner">
         <item> </item>

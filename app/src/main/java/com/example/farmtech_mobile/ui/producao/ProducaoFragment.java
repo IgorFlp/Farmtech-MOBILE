@@ -241,7 +241,7 @@ public class ProducaoFragment extends Fragment {
                     String quantString = lblQuant.getText().toString().replaceAll("[^\\d.]", "");
                     BigDecimal quantProd = BigDecimal.valueOf(Double.parseDouble(quantString));
                     Estoque estoque = new Estoque(idProduto,quantProd);
-                    Log.d("ProducaoFragment", "ProdutoId e Quant: "+ estoque.getPdtId() +" - "+ estoque.getQuantidade());
+                    Log.d("ProducaoFragment", "ProdutoId e Quant: "+ estoque.getPdtId() +" - "+ estoque.getQuant());
                     estoques.add(estoque);
                 }
                 Calendar calendar = Calendar.getInstance();
@@ -249,7 +249,7 @@ public class ProducaoFragment extends Fragment {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String dataFormatada = sdf.format(dataAtual);
 
-                Producao producao = new Producao(dataFormatada);
+                Producao producao = new Producao(dataAtual);
 
 
                 Log.d("ProducaoFragment", "data "+dataFormatada);
@@ -272,7 +272,7 @@ public class ProducaoFragment extends Fragment {
                             //Invocar criar produção_produtos com pdt_id e quant da lista estoques
                             // e pdc_id(gerado pela call anterior)
                             for(Estoque estoque : estoques){
-                                ProducaoProdutos producaoProdutos = new ProducaoProdutos(producao.getId(), estoque.getPdtId(),estoque.getQuantidade());
+                                ProducaoProdutos producaoProdutos = new ProducaoProdutos(producao.getId(), estoque.getPdtId(),estoque.getQuant());
                                 Call<ProducaoProdutos> criarProducaoProdutos = apiService.criarProducaoProdutos(producaoProdutos);
                                 criarProducaoProdutos.enqueue(new Callback<ProducaoProdutos>() {
                                     @Override
@@ -280,8 +280,8 @@ public class ProducaoFragment extends Fragment {
                                         if(response.isSuccessful()){
                                             Log.d("ProducaoFragment", "ProducaoProdutos criada com sucesso");
                                             //Invocar AdicionarEstoque com pdt_id e quant da lista estoques.
-                                            Log.d("ProducaoFragment", "Estoque id e quant"+estoque.getPdtId()+"-"+estoque.getQuantidade());
-                                            Call<Void> adicionarEstoque = apiService.adicionarEstoque(estoque.getPdtId(),estoque.getQuantidade());
+                                            Log.d("ProducaoFragment", "Estoque id e quant"+estoque.getPdtId()+"-"+estoque.getQuant());
+                                            Call<Void> adicionarEstoque = apiService.adicionarEstoque(estoque.getPdtId(),estoque.getQuant());
                                             adicionarEstoque.enqueue(new Callback<Void>() {
                                                 @Override
                                                 public void onResponse(Call<Void> call, Response<Void> response) {

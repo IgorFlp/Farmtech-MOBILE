@@ -14,6 +14,11 @@ public class ProducaoProdutosController : ControllerBase
 	{
 		_context = context;
 	} 
+	[HttpGet]
+	public async Task<ActionResult<IEnumerable<ProducaoProdutos>>> GetProducoesProdutos()
+	{
+		return await _context.ProducaoProdutos.ToListAsync();
+    }
 	// POST: api/ProducaoProdutos
 	[HttpPost]
 	public async Task<ActionResult<ProducaoProdutos>> PostProducaoProdutos([FromBody] ProducaoProdutos producaoProdutos)

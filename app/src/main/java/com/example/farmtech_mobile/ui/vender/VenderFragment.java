@@ -378,7 +378,7 @@ public class VenderFragment extends Fragment {
                             Venda venda = response.body();
                             Log.d("VenderFragment", "Venda response: " + new Gson().toJson(venda));
                             for(Estoque estoque : estoques){
-                                VendaProdutos vendaProduto = new VendaProdutos(venda.getId(),estoque.getPdtId(),estoque.getQuantidade());
+                                VendaProdutos vendaProduto = new VendaProdutos(venda.getId(),estoque.getPdtId(),estoque.getQuant());
                                 Call<VendaProdutos> criarVendaProduto = apiService.criarVendaProduto(vendaProduto);
                                 Log.d("VenderFragment", "VendaProduto objeto: "+ new Gson().toJson(vendaProduto));
                                 criarVendaProduto.enqueue(new Callback<VendaProdutos>() {
@@ -389,7 +389,7 @@ public class VenderFragment extends Fragment {
                                             String json2 = new Gson().toJson(vendaProdutos);
                                             Log.d("VenderFragment", "vendaProdutos: "+ json2);
 
-                                            Call<Void> subtrairEstoque = apiService.subtrairEstoque(estoque.getPdtId(),estoque.getQuantidade());
+                                            Call<Void> subtrairEstoque = apiService.subtrairEstoque(estoque.getPdtId(),estoque.getQuant());
                                             subtrairEstoque.enqueue(new Callback<Void>() {
                                                 @Override
                                                 public void onResponse(Call<Void> call, Response<Void> response) {

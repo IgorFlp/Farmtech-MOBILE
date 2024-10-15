@@ -20,6 +20,8 @@
             android:name=".SecundaryActivity"
             android:exported="true"
             android:theme="@style/Theme.FarmtechMOBILE.NoActionBar"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
