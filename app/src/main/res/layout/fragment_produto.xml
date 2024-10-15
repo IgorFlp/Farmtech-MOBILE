@@ -137,7 +137,7 @@
                 android:id="@+id/btnEsconder"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_marginLeft="270sp"
+                android:layout_marginLeft="240sp"
                 android:layout_weight="0"
                 android:foreground="@mipmap/dropup_foreground" />
         </LinearLayout>

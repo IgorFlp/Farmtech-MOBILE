@@ -143,72 +143,92 @@ public class ProducaoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 SpinnerItem item = (SpinnerItem) slcProduto.getSelectedItem();
+                if(txtQuant.getText().toString().isEmpty()){
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Produção")
+                            .setMessage("Preencha a quantidade do produto!")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }else if(((SpinnerItem) slcProduto.getSelectedItem()).getArg1().equals("0")){
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Produção")
+                            .setMessage("Selecione um produto valido!")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }else{
+                    Context contextLista = producaoLista.getContext();
+                    LinearLayout producaoContainer = new LinearLayout(contextLista);
+                    producaoContainer.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    ));
+                    producaoContainer.setOrientation(LinearLayout.VERTICAL);
+                    producaoContainer.setTag("produtoContainer");
+                    producaoContainer.setId(View.generateViewId());
+                    int containerId = producaoContainer.getId();
 
+                    Context contextContainer = producaoContainer.getContext();
+                    LinearLayout producaoRow = new LinearLayout(contextContainer);
+                    producaoRow.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
 
-                Context contextLista = producaoLista.getContext();
-                LinearLayout producaoContainer = new LinearLayout(contextLista);
-                producaoContainer.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                ));
-                producaoContainer.setOrientation(LinearLayout.VERTICAL);
-                producaoContainer.setTag("produtoContainer");
-                producaoContainer.setId(View.generateViewId());
-                int containerId = producaoContainer.getId();
+                    ));
+                    producaoRow.setOrientation(LinearLayout.HORIZONTAL);
+                    producaoRow.setGravity(Gravity.CENTER_VERTICAL);
+                    producaoRow.setTag("produtoRow");
+                    producaoRow.setId(View.generateViewId());
+                    int rowId = producaoRow.getId();
+                    Context contextRow = producaoRow.getContext();
 
-                Context contextContainer = producaoContainer.getContext();
-                LinearLayout producaoRow = new LinearLayout(contextContainer);
-                producaoRow.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    CheckBox cbProducao = new CheckBox(contextRow);
+                    cbProducao.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
+                    cbProducao.setTag("cbProduto");
+                    cbProducao.setId(View.generateViewId());
 
-                ));
-                producaoRow.setOrientation(LinearLayout.HORIZONTAL);
-                producaoRow.setGravity(Gravity.CENTER_VERTICAL);
-                producaoRow.setTag("produtoRow");
-                producaoRow.setId(View.generateViewId());
-                int rowId = producaoRow.getId();
-                Context contextRow = producaoRow.getContext();
+                    TextView lblProduto = new TextView(contextRow);
+                    LinearLayout.LayoutParams lblProdutoParams = new LinearLayout.LayoutParams(
+                            dpToPx(210), // largura em pixels
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    lblProdutoParams.setMargins(20, 0, 0, 0);
+                    lblProduto.setLayoutParams(lblProdutoParams);
+                    lblProduto.setText(item.getText());
+                    lblProduto.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                    lblProduto.setTextColor(Color.parseColor("#242424"));
+                    lblProduto.setId(Integer.parseInt(item.getArg1()));
+                    lblProduto.setTag("lblProduto");
 
-                CheckBox cbProducao = new CheckBox(contextRow);
-                cbProducao.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
-                cbProducao.setTag("cbProduto");
-                cbProducao.setId(View.generateViewId());
+                    TextView lblQuant = new TextView(contextRow);
+                    LinearLayout.LayoutParams lblQuantParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    lblQuantParams.setMargins(40, 0, 0, 0);
+                    lblQuant.setLayoutParams(lblQuantParams);
+                    String quant = txtQuant.getText() + item.getArg2();
+                    lblQuant.setText(quant);
+                    lblQuant.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    lblQuant.setTextColor(Color.parseColor("#242424"));
+                    lblQuant.setId(View.generateViewId());
+                    lblQuant.setTag("produtoQuantLabel");
 
-                TextView lblProduto = new TextView(contextRow);
-                LinearLayout.LayoutParams  lblProdutoParams = new LinearLayout.LayoutParams(
-                        dpToPx(210), // largura em pixels
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                lblProdutoParams.setMargins(20, 0, 0, 0);
-                lblProduto.setLayoutParams(lblProdutoParams);
-                lblProduto.setText(item.getText());
-                lblProduto.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                lblProduto.setTextColor(Color.parseColor("#242424"));
-                lblProduto.setId(Integer.parseInt(item.getArg1()));
-                lblProduto.setTag("lblProduto");
+                    producaoRow.addView(cbProducao);
+                    producaoRow.addView(lblProduto);
+                    producaoRow.addView(lblQuant);
 
-                TextView lblQuant = new TextView(contextRow);
-                LinearLayout.LayoutParams  lblQuantParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                lblQuantParams.setMargins(40, 0, 0, 0);
-                lblQuant.setLayoutParams(lblQuantParams);
-                String quant = txtQuant.getText()+item.getArg2();
-                lblQuant.setText(quant);
-                lblQuant.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                lblQuant.setTextColor(Color.parseColor("#242424"));
-                lblQuant.setId(View.generateViewId());
-                lblQuant.setTag("produtoQuantLabel");
+                    producaoContainer.addView(producaoRow);
 
-                producaoRow.addView(cbProducao);
-                producaoRow.addView(lblProduto);
-                producaoRow.addView(lblQuant);
-
-                producaoContainer.addView(producaoRow);
-
-                producaoLista.addView(producaoContainer);
+                    producaoLista.addView(producaoContainer);
+                }
             }});
         btnEsconder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,6 +249,17 @@ public class ProducaoFragment extends Fragment {
         btnConfirma.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                if(binding.producaoLista.getChildCount() == 0){
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Produção")
+                            .setMessage("Lista vazia, adicione um produto!")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }else{
                 LinearLayout listaProdutos = binding.producaoLista;
                 List<Estoque> estoques = new ArrayList<>();
                 for (int i = 0; i < listaProdutos.getChildCount(); i++) {
@@ -263,31 +294,31 @@ public class ProducaoFragment extends Fragment {
                     public void onResponse(Call<Producao> call, Response<Producao> response) {
                         Log.d("ProducaoFragment", "Entrou no onResponse");
 
-                        if (response.isSuccessful()){
+                        if (response.isSuccessful()) {
                             Producao producao = response.body();
                             String json = new Gson().toJson(producao);
-                            Log.d("ProducaoFragment", "Producao criada com sucesso"+json);
+                            Log.d("ProducaoFragment", "Producao criada com sucesso" + json);
 
 
                             //Invocar criar produção_produtos com pdt_id e quant da lista estoques
                             // e pdc_id(gerado pela call anterior)
-                            for(Estoque estoque : estoques){
-                                ProducaoProdutos producaoProdutos = new ProducaoProdutos(producao.getId(), estoque.getPdtId(),estoque.getQuant());
+                            for (Estoque estoque : estoques) {
+                                ProducaoProdutos producaoProdutos = new ProducaoProdutos(producao.getId(), estoque.getPdtId(), estoque.getQuant());
                                 Call<ProducaoProdutos> criarProducaoProdutos = apiService.criarProducaoProdutos(producaoProdutos);
                                 criarProducaoProdutos.enqueue(new Callback<ProducaoProdutos>() {
                                     @Override
                                     public void onResponse(Call<ProducaoProdutos> call, Response<ProducaoProdutos> response) {
-                                        if(response.isSuccessful()){
+                                        if (response.isSuccessful()) {
                                             Log.d("ProducaoFragment", "ProducaoProdutos criada com sucesso");
                                             //Invocar AdicionarEstoque com pdt_id e quant da lista estoques.
-                                            Log.d("ProducaoFragment", "Estoque id e quant"+estoque.getPdtId()+"-"+estoque.getQuant());
-                                            Call<Void> adicionarEstoque = apiService.adicionarEstoque(estoque.getPdtId(),estoque.getQuant());
+                                            Log.d("ProducaoFragment", "Estoque id e quant" + estoque.getPdtId() + "-" + estoque.getQuant());
+                                            Call<Void> adicionarEstoque = apiService.adicionarEstoque(estoque.getPdtId(), estoque.getQuant());
                                             adicionarEstoque.enqueue(new Callback<Void>() {
                                                 @Override
                                                 public void onResponse(Call<Void> call, Response<Void> response) {
-                                                    if(response.isSuccessful()){
+                                                    if (response.isSuccessful()) {
                                                         Log.d("ProducaoFragment", "Estoque atualizado com sucesso");
-                                                        }else{
+                                                    } else {
                                                         try {
                                                             // Log do código de erro, headers e o corpo do erro
                                                             Log.d("ProducaoFragment", "Estoque não atualizado. Código: " + response.code() +
@@ -298,43 +329,48 @@ public class ProducaoFragment extends Fragment {
                                                         }
                                                     }
                                                 }
+
                                                 @Override
                                                 public void onFailure(Call<Void> call, Throwable t) {
-                                                    Log.d("ProducaoFragment", "Erro call: "+t.getMessage());
+                                                    Log.d("ProducaoFragment", "Erro call: " + t.getMessage());
                                                 }
                                             });
-                                        }else{
+                                        } else {
                                             Log.d("ProducaoFragment", "ProducaoProdutos não criada");
                                         }
                                     }
+
                                     @Override
                                     public void onFailure(Call<ProducaoProdutos> call, Throwable t) {
-                                        Log.d("ProducaoFragment", "Erro call: "+t.getMessage());
+                                        Log.d("ProducaoFragment", "Erro call: " + t.getMessage());
                                     }
                                 });
                             }
 
-                        }else{
+                        } else {
                             Log.d("ProducaoFragment", "Response não retornou sucessful");
-                            Log.d("ProducaoFragment", "Response: "+response.body());
+                            Log.d("ProducaoFragment", "Response: " + response.body());
                         }
                         new AlertDialog.Builder(getContext())
                                 .setTitle("Cadastro de produção")
                                 .setMessage("Produção registrada com sucesso!")
                                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment_content_secundary);
+                                        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_secundary);
                                         navController.navigate(R.id.nav_producao);
                                     }
                                 })
                                 .setIcon(android.R.drawable.ic_dialog_alert)
                                 .show();
                     }
+
                     @Override
                     public void onFailure(Call<Producao> call, Throwable t) {
-                        Log.d("ProducaoFragment", "Erro producao call: "+t.getMessage());
+                        Log.d("ProducaoFragment", "Erro producao call: " + t.getMessage());
                     }
+
                 });
+                }
             }
         });
         slcProduto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -369,7 +405,8 @@ public class ProducaoFragment extends Fragment {
             public void onResponse(Call<List<Produto>> call, Response<List<Produto>> response) {
                 if(response.isSuccessful()){
                         List<Produto> produtos = response.body();
-                        for (Produto produto : produtos) {
+                    spinnerItems.add(new SpinnerItem("Selecione um produto", "0","0"));
+                    for (Produto produto : produtos) {
                             spinnerItems.add(new SpinnerItem(produto.getNome(), String.valueOf(produto.getId()),produto.getUnMedida()));
                         }
 

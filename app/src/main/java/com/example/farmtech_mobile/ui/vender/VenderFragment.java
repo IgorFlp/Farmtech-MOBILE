@@ -5,6 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -33,6 +34,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.farmtech_mobile.R;
+import com.example.farmtech_mobile.SecundaryActivity;
 import com.example.farmtech_mobile.api.ApiService;
 import com.example.farmtech_mobile.api.RetrofitClient;
 import com.example.farmtech_mobile.data.model.Cliente;
@@ -189,113 +191,135 @@ public class VenderFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 SpinnerItem item = (SpinnerItem) slcProduto.getSelectedItem();
-
-                for(Produto produto: produtos){
-                    if(produto.getId() == Integer.parseInt(item.getArg1())){
-                        produtoSelecionado[0] = produto;
+                if(txtQuant.getText().toString().isEmpty()){
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Vendas")
+                            .setMessage("Preencha a quantidade do produto!")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }else if(((SpinnerItem) slcProduto.getSelectedItem()).getArg1().equals("0")){
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Vendas")
+                            .setMessage("Selecione um produto valido!")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }else{
+                    for (Produto produto : produtos) {
+                        if (produto.getId() == Integer.parseInt(item.getArg1())) {
+                            produtoSelecionado[0] = produto;
+                        }
                     }
-                };
+                    ;
 
 
-                Context contextLista = vendaLista.getContext();
-                LinearLayout vendaContainer = new LinearLayout(contextLista);
-                vendaContainer.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                ));
-                vendaContainer.setOrientation(LinearLayout.VERTICAL);
-                vendaContainer.setTag("produtoContainer");
-                vendaContainer.setId(View.generateViewId());
-                int containerId = vendaContainer.getId();
-                Context contextContainer = vendaContainer.getContext();
+                    Context contextLista = vendaLista.getContext();
+                    LinearLayout vendaContainer = new LinearLayout(contextLista);
+                    vendaContainer.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    ));
+                    vendaContainer.setOrientation(LinearLayout.VERTICAL);
+                    vendaContainer.setTag("produtoContainer");
+                    vendaContainer.setId(View.generateViewId());
+                    int containerId = vendaContainer.getId();
+                    Context contextContainer = vendaContainer.getContext();
 
-                LinearLayout vendaRow = new LinearLayout(contextContainer);
-                vendaRow.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    LinearLayout vendaRow = new LinearLayout(contextContainer);
+                    vendaRow.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
 
-                ));
+                    ));
 
-                vendaRow.setOrientation(LinearLayout.HORIZONTAL);
-                vendaRow.setGravity(Gravity.CENTER_VERTICAL);
-                vendaRow.setTag("vendaRow");
-                vendaRow.setId(View.generateViewId());
-                int rowId = vendaRow.getId();
-                Context contextRow = vendaRow.getContext();
+                    vendaRow.setOrientation(LinearLayout.HORIZONTAL);
+                    vendaRow.setGravity(Gravity.CENTER_VERTICAL);
+                    vendaRow.setTag("vendaRow");
+                    vendaRow.setId(View.generateViewId());
+                    int rowId = vendaRow.getId();
+                    Context contextRow = vendaRow.getContext();
 
-                CheckBox cbVenda = new CheckBox(contextRow);
-                cbVenda.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
-                cbVenda.setTag("cbProduto");
-                cbVenda.setId(View.generateViewId());
+                    CheckBox cbVenda = new CheckBox(contextRow);
+                    cbVenda.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
+                    cbVenda.setTag("cbProduto");
+                    cbVenda.setId(View.generateViewId());
 
-                TextView lblProduto = new TextView(contextRow);
-                LinearLayout.LayoutParams lblProdutoParams = new LinearLayout.LayoutParams(
-                        dpToPx(170), // largura em pixels
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                lblProdutoParams.setMargins(20, 0, 0, 0);
-                lblProduto.setLayoutParams(lblProdutoParams);
-                lblProduto.setText(item.getText());
-                lblProduto.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                lblProduto.setTextColor(Color.parseColor("#242424"));
-                lblProduto.setId(Integer.parseInt(item.getArg1()));
-                lblProduto.setTag("lblProduto");
+                    TextView lblProduto = new TextView(contextRow);
+                    LinearLayout.LayoutParams lblProdutoParams = new LinearLayout.LayoutParams(
+                            dpToPx(170), // largura em pixels
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    lblProdutoParams.setMargins(20, 0, 0, 0);
+                    lblProduto.setLayoutParams(lblProdutoParams);
+                    lblProduto.setText(item.getText());
+                    lblProduto.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                    lblProduto.setTextColor(Color.parseColor("#242424"));
+                    lblProduto.setId(Integer.parseInt(item.getArg1()));
+                    lblProduto.setTag("lblProduto");
 
-                TextView lblQuant = new TextView(contextRow);
-                LinearLayout.LayoutParams lblQuantParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                lblQuantParams.setMargins(dpToPx(5), 0, 0, 0);
-                lblQuant.setLayoutParams(lblQuantParams);
-                String quant = txtQuant.getText()+item.getArg2();
-                lblQuant.setText(quant);
-                lblQuant.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                lblQuant.setTextColor(Color.parseColor("#242424"));
-                lblQuant.setId(View.generateViewId());
-                lblQuant.setTag("produtoQuantLabel");
+                    TextView lblQuant = new TextView(contextRow);
+                    LinearLayout.LayoutParams lblQuantParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    lblQuantParams.setMargins(dpToPx(5), 0, 0, 0);
+                    lblQuant.setLayoutParams(lblQuantParams);
+                    String quant = txtQuant.getText() + item.getArg2();
+                    lblQuant.setText(quant);
+                    lblQuant.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    lblQuant.setTextColor(Color.parseColor("#242424"));
+                    lblQuant.setId(View.generateViewId());
+                    lblQuant.setTag("produtoQuantLabel");
 
-                TextView lblPrecoUn = new TextView(contextRow);
-                LinearLayout.LayoutParams lblPrecoUnParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                lblPrecoUnParams.setMargins(dpToPx(13), 0, 0, 0);
-                lblPrecoUn.setLayoutParams(lblPrecoUnParams);
-                String precoUn = Double.toString(produtoSelecionado[0].getPrecoUn());
-                lblPrecoUn.setText(String.format("%.2f",produtoSelecionado[0].getPrecoUn()));
-                lblPrecoUn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                lblPrecoUn.setTextColor(Color.parseColor("#242424"));
-                lblPrecoUn.setId(View.generateViewId());
-                lblPrecoUn.setTag("produtoPrecoUnLabel");
+                    TextView lblPrecoUn = new TextView(contextRow);
+                    LinearLayout.LayoutParams lblPrecoUnParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    lblPrecoUnParams.setMargins(dpToPx(13), 0, 0, 0);
+                    lblPrecoUn.setLayoutParams(lblPrecoUnParams);
+                    String precoUn = Double.toString(produtoSelecionado[0].getPrecoUn());
+                    lblPrecoUn.setText(String.format("%.2f", produtoSelecionado[0].getPrecoUn()));
+                    lblPrecoUn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    lblPrecoUn.setTextColor(Color.parseColor("#242424"));
+                    lblPrecoUn.setId(View.generateViewId());
+                    lblPrecoUn.setTag("produtoPrecoUnLabel");
 
-                TextView lblTotalProd = new TextView(contextRow);
-                LinearLayout.LayoutParams lblTotalProdParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                lblTotalProdParams.setMargins(dpToPx(20), 0, 0, 0);
-                lblTotalProd.setLayoutParams(lblTotalProdParams);
+                    TextView lblTotalProd = new TextView(contextRow);
+                    LinearLayout.LayoutParams lblTotalProdParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    lblTotalProdParams.setMargins(dpToPx(20), 0, 0, 0);
+                    lblTotalProd.setLayoutParams(lblTotalProdParams);
 
-                double preco = produtoSelecionado[0].getPrecoUn();
-                String precoString = String.valueOf(preco).replace(",",".");
-                double totalProd = Double.parseDouble(precoString) * Double.parseDouble(txtQuant.getText().toString());
+                    double preco = produtoSelecionado[0].getPrecoUn();
+                    String precoString = String.valueOf(preco).replace(",", ".");
+                    double totalProd = Double.parseDouble(precoString) * Double.parseDouble(txtQuant.getText().toString());
 
-                lblTotalProd.setText(String.format("%.2f", totalProd));
-                lblTotalProd.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                lblTotalProd.setTextColor(Color.parseColor("#242424"));
-                lblTotalProd.setId(View.generateViewId());
-                lblTotalProd.setTag("produtoTotalLabel");
+                    lblTotalProd.setText(String.format("%.2f", totalProd));
+                    lblTotalProd.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    lblTotalProd.setTextColor(Color.parseColor("#242424"));
+                    lblTotalProd.setId(View.generateViewId());
+                    lblTotalProd.setTag("produtoTotalLabel");
 
-                vendaRow.addView(cbVenda);
-                vendaRow.addView(lblProduto);
-                vendaRow.addView(lblQuant);
-                vendaRow.addView(lblPrecoUn);
-                vendaRow.addView(lblTotalProd);
+                    vendaRow.addView(cbVenda);
+                    vendaRow.addView(lblProduto);
+                    vendaRow.addView(lblQuant);
+                    vendaRow.addView(lblPrecoUn);
+                    vendaRow.addView(lblTotalProd);
 
-                //vendaContainer.addView(legenda);
-                vendaContainer.addView(vendaRow);
+                    //vendaContainer.addView(legenda);
+                    vendaContainer.addView(vendaRow);
 
-                vendaLista.addView(vendaContainer);
-                calcSubTotal();
+                    vendaLista.addView(vendaContainer);
+                    calcSubTotal();
+                }
             }});
         btnBuscarCupom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -322,7 +346,27 @@ public class VenderFragment extends Fragment {
         btnConfirma.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-
+                if(slcCliente.getSelectedItem().toString().equals("Selecione um cliente")){
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Vendas")
+                            .setMessage("Selecione um cliente valido!")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }else if(binding.vendaLista.getChildCount() == 0){
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Vendas")
+                            .setMessage("Lista vazia, adicione um produto!")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }else{
                 LinearLayout listaVendas = binding.vendaLista;
                 for(int i = 0; i < listaVendas.getChildCount(); i++){
                     LinearLayout container = (LinearLayout) listaVendas.getChildAt(i);
@@ -440,6 +484,7 @@ public class VenderFragment extends Fragment {
                         Log.d("VenderFragment", "onFailure Erro: "+t.getMessage());
                     }
                 });
+                }
 
         }});
         slcEntrega.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -564,6 +609,8 @@ public class VenderFragment extends Fragment {
                 List<Produto> produtos = new ArrayList<>();
                 if(response.isSuccessful()){
                     produtos = response.body();
+                    spinnerProdutos.add(new SpinnerItem("Selecione um produto","0",""));
+
                     for (Produto produto : produtos) {
                         spinnerProdutos.add(new SpinnerItem(produto.getNome(), String.valueOf(produto.getId()),produto.getUnMedida()));
                         produtosList.add(produto);
@@ -596,7 +643,7 @@ public class VenderFragment extends Fragment {
             public void onResponse(Call<List<Cliente>> call, Response<List<Cliente>> response) {
                 if(response.isSuccessful()){
                     List<Cliente> clientes = response.body();
-
+                    spinnerClientes.add(new SpinnerItem("Selecione um cliente","0",""));
                     for (Cliente cliente : clientes) {
                         spinnerClientes.add(new SpinnerItem(cliente.getNome(), cliente.getCpf(), cliente.getTelefone()));
 
