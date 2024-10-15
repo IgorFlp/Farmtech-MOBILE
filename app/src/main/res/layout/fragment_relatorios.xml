@@ -142,7 +142,6 @@
                     android:layout_gravity="center_horizontal"
                     android:gravity="center_horizontal"
                     android:text="Relatório"
-                    android:textAlignment="viewStart"
                     android:textColor="#242424"
                     android:textSize="24sp"
                     android:textStyle="bold" />
