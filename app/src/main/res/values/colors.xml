@@ -3,9 +3,11 @@
     <color name="verde_claroAlternativa">#96e899</color>
     <color name="verde_button">#95f06a</color>
     <color name="verde_forte">#99d080</color>
+    <color name="verde_forte_claro">#D0F8C0</color>
     <color name="verde_alternativa">#99d899</color>
     <color name="verde_claro">#98d899</color>
     <color name="verde_fundo">#F5FDEF</color>
+    <color name="verde_header">#E1FFCB</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>

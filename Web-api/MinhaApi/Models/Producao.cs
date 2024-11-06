@@ -8,6 +8,6 @@ public class Producao
     // Construir classe com base no banco
     [Key]
     public int Id { get; set; }    
-    public DateOnly dataProd { get; set; }  
+    public DateOnly DataProd { get; set; }    
        
 }

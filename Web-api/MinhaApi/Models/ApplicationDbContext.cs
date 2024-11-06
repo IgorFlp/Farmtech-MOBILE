@@ -15,8 +15,12 @@ namespace MinhaApi.Models
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<Estoque> Estoques { get; set; }
         public DbSet<Producao> Producoes { get; set; }
+        public DbSet<ProducaoProdutos> ProducaoProdutos { get; set; }
+        public DbSet<VendaProdutos> VendaProdutos { get; set; }
         public DbSet<ClienteEndereco> ClientesEnderecos { get; set; }
         public DbSet<FornecedorEndereco> FornecedoresEnderecos { get; set; }
+        public DbSet<Cupom> Cupons { get; set; }
+        public DbSet<Venda> Vendas { get; set; }
         //public DbSet<ClienteEndereco> ClientesEnderecos { get; set; }
         // Adicione outras DbSets aqui
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -33,7 +37,11 @@ namespace MinhaApi.Models
                 .Property(e => e.Pdt_id)
                 .ValueGeneratedNever();
 
-            modelBuilder.Entity<Producao>().ToTable("Tb_producao");           
+            modelBuilder.Entity<Producao>().ToTable("Tb_producao");  
+            modelBuilder.Entity<ProducaoProdutos>().ToTable("Tb_producao_produtos");   
+            modelBuilder.Entity<Cupom>().ToTable("Tb_cupom");
+            modelBuilder.Entity<Venda>().ToTable("Tb_venda");  
+            modelBuilder.Entity<VendaProdutos>().ToTable("Tb_ven_produtos");      
 
         }
     }

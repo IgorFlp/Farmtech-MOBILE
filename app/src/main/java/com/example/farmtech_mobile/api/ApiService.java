@@ -9,15 +9,21 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import com.example.farmtech_mobile.data.model.Cliente;
 import com.example.farmtech_mobile.data.model.ClienteEndereco;
+import com.example.farmtech_mobile.data.model.Cupom;
 import com.example.farmtech_mobile.data.model.Estoque;
 import com.example.farmtech_mobile.data.model.Fornecedor;
 import com.example.farmtech_mobile.data.model.FornecedorEndereco;
 import com.example.farmtech_mobile.data.model.Producao;
+import com.example.farmtech_mobile.data.model.ProducaoProdutos;
 import com.example.farmtech_mobile.data.model.Produto;
 import com.example.farmtech_mobile.data.model.Usuario;
+import com.example.farmtech_mobile.data.model.Venda;
+import com.example.farmtech_mobile.data.model.VendaProdutos;
 
 
 public interface ApiService {
@@ -131,7 +137,7 @@ public interface ApiService {
     Call<List<Estoque>> getEstoques();
 
     @GET("Estoque/{id}")
-    Call<Estoque> getEstoque(@Path("id") Integer id);
+    Call<Estoque> getEstoque(@Path("id") int id);
 
     @POST("Estoque")
     Call<Estoque> criarEstoque(@Body Estoque estoque);
@@ -142,11 +148,17 @@ public interface ApiService {
     @DELETE("Estoque/{id}")
     Call<Estoque> deleteEstoque(@Path("id") Integer id);
 
-    //PRODUTOÇÃO
-    /*
+    @PUT("Estoque/Adicionar/{id}")
+    Call<Void> adicionarEstoque(@Path("id") int id, @Query("quantidade") BigDecimal quantidade);
+
+    @PUT("Estoque/Subtrair/{id}")
+    Call<Void> subtrairEstoque(@Path("id") int id, @Query("quantidade") BigDecimal quantidade);
+
+    //PRODUÇÃO
+
     @GET("Producao")
     Call<List<Producao>> getProducoes();
-
+    /*
     @GET("Producao/{id}")
     Call<Producao> getProducao(@Path("id") Integer id);
     */
@@ -159,4 +171,26 @@ public interface ApiService {
     @DELETE("Producao/{id}")
     Call<Producao> deleteProducao(@Path("id") Integer id);
     */
+    //PRODUCAO PRODUTOS
+    @GET("ProducaoProdutos")
+    Call<List<ProducaoProdutos>> getProducaoProdutos();
+    @POST("ProducaoProdutos")
+    Call<ProducaoProdutos> criarProducaoProdutos(@Body ProducaoProdutos producaoProdutos);
+
+    //CUPOM
+    @GET("Cupom/{nome}")
+    Call<Cupom> buscarCupom(@Path("nome") String nome);
+
+    //VENDA
+    @GET("Venda")
+    Call<List<Venda>> getVendas();
+    @POST("Venda")
+    Call<Venda> criarVenda(@Body Venda venda);
+
+
+    //VENDAPRODUTOS
+    @GET("VendaProdutos")
+    Call<List<VendaProdutos>> getVendaProdutos();
+    @POST("VendaProdutos")
+    Call<VendaProdutos> criarVendaProduto(@Body VendaProdutos vendaProdutos);
 }

@@ -1,26 +1,35 @@
 package com.example.farmtech_mobile;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.farmtech_mobile.databinding.ActivityMainBinding;
 import com.example.farmtech_mobile.databinding.ActivitySecundaryBinding;
+import com.example.farmtech_mobile.ui.relatorios.RelatoriosFragment;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
 
 
 public class SecundaryActivity extends AppCompatActivity {
@@ -72,18 +81,36 @@ public class SecundaryActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         // Configurando o NavigationView e o NavController
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_Cliente,R.id.nav_fornecedor,R.id.nav_usuario,R.id.nav_produto,R.id.nav_vender, R.id.nav_producao)
+                R.id.nav_home, R.id.nav_Cliente,R.id.nav_fornecedor,R.id.nav_usuario,R.id.nav_produto,R.id.nav_vender, R.id.nav_producao,R.id.nav_relatorios)
                 .setOpenableLayout(drawer)
                 .build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_secundary);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+            @Override
+            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
+                // Verifica o ID do fragmento atual
+                if (destination.getId() == R.id.nav_relatorios) {
+                    // Define a orientação como landscape para o fragmento de relatórios
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                } else {
+                    // Define a orientação como portrait para os outros fragmentos
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }
+
+            }
+        });
+
+
     }
     @Override
     public boolean onSupportNavigateUp() {

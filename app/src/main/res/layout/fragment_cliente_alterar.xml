@@ -341,32 +341,33 @@
                             android:maxLength="8" />
 
                         <LinearLayout
-                            android:layout_width="367sp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="30sp"
+                            android:gravity="start"
                             android:orientation="horizontal">
 
                             <Button
                                 android:id="@+id/btnConfirma"
-                                android:layout_width="102dp"
-                                android:layout_height="80sp"
+                                android:layout_width="100sp"
+                                android:layout_height="90sp"
                                 android:layout_marginRight="20sp"
-                                android:layout_weight="1"
+                                android:layout_weight="0"
                                 android:backgroundTint="#66DC62"
+                                android:foreground="@mipmap/ic_confirma_foreground"
                                 android:insetTop="6dp"
                                 android:insetBottom="6dp"
-                                app:icon="@mipmap/ic_confirma_foreground"
                                 app:iconPadding="0sp"
                                 app:iconTint="#000000" />
 
                             <Button
                                 android:id="@+id/btnCancelar"
-                                android:layout_width="102dp"
-                                android:layout_height="80sp"
-                                android:layout_marginLeft="80sp"
-                                android:layout_weight="1"
+                                android:layout_width="100sp"
+                                android:layout_height="90sp"
+                                android:layout_marginLeft="110sp"
+                                android:layout_weight="0"
                                 android:backgroundTint="#E95F5F"
-                                app:icon="@mipmap/ic_cancelar_foreground"
+                                android:foreground="@mipmap/ic_cancelar_foreground"
                                 app:iconPadding="0sp"
                                 app:iconTint="#000000" />
                         </LinearLayout>

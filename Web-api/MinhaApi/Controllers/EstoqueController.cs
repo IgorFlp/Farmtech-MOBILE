@@ -76,6 +76,73 @@ public class EstoqueController : ControllerBase
 
 		return NoContent();
 	}
+	// PUT: api/Estoque/Adicionar/5
+	[HttpPut("Adicionar/{pdt_id}")]
+	public async Task<IActionResult> AdicionarEstoque(int pdt_id, decimal quantidade)                
+	{	
+		
+		Estoque estoqueAtual = await _context.Estoques.FindAsync(pdt_id);
+		Estoque estoqueNovo = estoqueAtual;
+		Console.WriteLine("Estoque Atual: "+estoqueAtual.Quant);
+		
+		estoqueNovo.Quant = estoqueAtual.Quant + quantidade;
+		Console.WriteLine("Estoque input: "+quantidade);
+				
+		Console.WriteLine("Estoque Novo: "+estoqueNovo.Quant);
+		
+		_context.Entry(estoqueNovo).State = EntityState.Modified;
+		try
+		{
+			await _context.SaveChangesAsync();
+		}
+		catch (DbUpdateConcurrencyException)
+		{
+			if (!EstoqueExists(pdt_id))
+			{
+				return NotFound();
+			}
+			else
+			{
+				throw;
+			}
+		}
+
+		return NoContent();
+	}
+
+	// PUT: api/Estoque/Subtrair/5
+	[HttpPut("Subtrair/{pdt_id}")]
+	public async Task<IActionResult> SubtrairEstoque(int pdt_id, decimal quantidade)                
+	{	
+		
+		Estoque estoqueAtual = await _context.Estoques.FindAsync(pdt_id);
+		Estoque estoqueNovo = estoqueAtual;
+		Console.WriteLine("Estoque Atual: "+estoqueAtual.Quant);
+		
+		estoqueNovo.Quant = estoqueAtual.Quant - quantidade;
+		Console.WriteLine("Estoque input: "+quantidade);
+				
+		Console.WriteLine("Estoque Novo: "+estoqueNovo.Quant);
+		
+		_context.Entry(estoqueNovo).State = EntityState.Modified;
+		try
+		{
+			await _context.SaveChangesAsync();
+		}
+		catch (DbUpdateConcurrencyException)
+		{
+			if (!EstoqueExists(pdt_id))
+			{
+				return NotFound();
+			}
+			else
+			{
+				throw;
+			}
+		}
+
+		return NoContent();
+	}
 
 	// DELETE: api/Estoque/5
 	[HttpDelete("{pdt_id}")]

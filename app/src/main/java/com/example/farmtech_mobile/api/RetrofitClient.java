@@ -4,7 +4,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import com.example.farmtech_mobile.api.ApiService;
 
 public class RetrofitClient {
-        private static final String BASE_URL = "http://10.0.0.219:5147/api/"; // Substitua com a URL da sua API
+        private static final String BASE_URL = "https://3a3c-2804-4230-21e-a7a-c1f0-cf5-2e01-2b40.ngrok-free.app/api/"; // Substitua com a URL da sua API
         private static Retrofit retrofit = null;
 
         public static Retrofit getClient() {
