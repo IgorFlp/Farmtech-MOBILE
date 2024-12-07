@@ -280,7 +280,7 @@ public class ProducaoFragment extends Fragment {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String dataFormatada = sdf.format(dataAtual);
 
-                Producao producao = new Producao(dataAtual);
+                Producao producao = new Producao(dataFormatada);
 
 
                 Log.d("ProducaoFragment", "data "+dataFormatada);

@@ -183,6 +183,16 @@ public class VenderFragment extends Fragment {
                     vendaLista.removeView(container);
                     calcSubTotal();
 
+                }else{
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Vendas")
+                            .setMessage("Selecione um produto para deletar!")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
             }
         });

@@ -344,25 +344,30 @@ public class ProdutoFragment extends Fragment {
         btnSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(modo[0].equals("Novo")){
-                    Log.d("ProdutoFragment", "MODO NOVO");
-                    String nome = txtNomeProduto.getText().toString();
+                boolean b = txtNomeProduto.getText() != null && !txtNomeProduto.getText().toString().isEmpty() &&
+                        txtPreco.getText() != null && !txtPreco.getText().toString().isEmpty() &&
+                        slcUnidade.getSelectedItem() != null && !slcUnidade.getSelectedItem().toString().isEmpty();
+
+                if(b == true) {
+                    if (modo[0].equals("Novo")) {
+                        Log.d("ProdutoFragment", "MODO NOVO");
+                        String nome = txtNomeProduto.getText().toString();
 
 
-                    double precoUn = Double.parseDouble(txtPreco.getText().toString().replace(",","."));
+                        double precoUn = Double.parseDouble(txtPreco.getText().toString().replace(",", "."));
 
-                    String unidade = slcUnidade.getSelectedItem().toString();
+                        String unidade = slcUnidade.getSelectedItem().toString();
 
-                    Produto produto = new Produto(nome,unidade,precoUn);
+                        Produto produto = new Produto(nome, unidade, precoUn);
 
-                    Call<Produto> novoProduto = apiService.criarProduto(produto);
-                    novoProduto.enqueue(new Callback<Produto>() {
-                        @Override
-                        public void onResponse(Call<Produto> call, Response<Produto> response) {
-                            if(response.isSuccessful()){
-                                Produto produto = response.body();
-                                String json = new Gson().toJson(produto);
-                                Log.d("Response", "Response Produto: "+json);
+                        Call<Produto> novoProduto = apiService.criarProduto(produto);
+                        novoProduto.enqueue(new Callback<Produto>() {
+                            @Override
+                            public void onResponse(Call<Produto> call, Response<Produto> response) {
+                                if (response.isSuccessful()) {
+                                    Produto produto = response.body();
+                                    String json = new Gson().toJson(produto);
+                                    Log.d("Response", "Response Produto: " + json);
 
                                 /*
                                 Estoque estoque = new Estoque(produto.getId(),100);
@@ -374,18 +379,18 @@ public class ProdutoFragment extends Fragment {
                                     @Override
                                     public void onResponse(Call<Estoque> call, Response<Estoque> response) {
                                         if(response.isSuccessful()){*/
-                                        new AlertDialog.Builder(getContext())
-                                                .setTitle("Cadastro de produto")
-                                                .setMessage("Produto criado com sucesso!")
-                                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment_content_secundary);
-                                                        navController.navigate(R.id.nav_produto);
-                                                    }
-                                                })
-                                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                                .show();
-                                        }
+                                    new AlertDialog.Builder(getContext())
+                                            .setTitle("Cadastro de produto")
+                                            .setMessage("Produto criado com sucesso!")
+                                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_secundary);
+                                                    navController.navigate(R.id.nav_produto);
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .show();
+                                }
                                     /*}
                                     @Override
                                     public void onFailure(Call<Estoque> call, Throwable t) {
@@ -394,45 +399,60 @@ public class ProdutoFragment extends Fragment {
                                 });
                                 }*/
                             }
-                        @Override
-                        public void onFailure(Call<Produto> call, Throwable t) {
-                            Log.d("ProdutoFragment", "Erro: "+t.getMessage());
-                        }
-                    });
-                } else if (modo[0].equals("Alterar")) {
-                    Log.d("ProdutoFragment", "MODO ALTERAR");
-                    String nome =  txtNomeProduto.getText().toString();
-                    String preco = txtPreco.getText().toString();
 
-                    String unidade = slcUnidade.getSelectedItem().toString();
-                    Integer id = (Integer) txtNomeProduto.getTag();
-
-                    Produto produto = new Produto(nome,unidade,Double.parseDouble(preco));
-                    produto.setId(id);
-                    Call<Produto> alterarProduto = apiService.atualizarProduto(id,produto);
-                    alterarProduto.enqueue(new Callback<Produto>() {
-                        @Override
-                        public void onResponse(Call<Produto> call, Response<Produto> response) {
-                            if(response.isSuccessful()){
-                                Log.d("ProdutoFragment", "Produto alterado com sucesso");
-                                new AlertDialog.Builder(getContext())
-                                        .setTitle("Cadastro de produto")
-                                        .setMessage("Produto alterado com sucesso!")
-                                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment_content_secundary);
-                                                navController.navigate(R.id.nav_produto);
-                                            }
-                                        })
-                                        .setIcon(android.R.drawable.ic_dialog_alert)
-                                        .show();
+                            @Override
+                            public void onFailure(Call<Produto> call, Throwable t) {
+                                Log.d("ProdutoFragment", "Erro: " + t.getMessage());
                             }
-                        }
-                        @Override
-                        public void onFailure(Call<Produto> call, Throwable t) {
-                            Log.d("ProdutoFragment", "Erro: "+t.getMessage());
-                        }
-                    });
+                        });
+                    } else if (modo[0].equals("Alterar")) {
+                        Log.d("ProdutoFragment", "MODO ALTERAR");
+                        String nome = txtNomeProduto.getText().toString();
+                        String preco = txtPreco.getText().toString().replaceAll(",", ".");
+
+                        String unidade = slcUnidade.getSelectedItem().toString();
+                        Integer id = (Integer) txtNomeProduto.getTag();
+
+                        Produto produto = new Produto(nome, unidade, Double.parseDouble(preco));
+                        produto.setId(id);
+                        Log.d("ProdutoFragment", "Produto: "+produto);
+                        Call<Produto> alterarProduto = apiService.atualizarProduto(id, produto);
+                        alterarProduto.enqueue(new Callback<Produto>() {
+                            @Override
+                            public void onResponse(Call<Produto> call, Response<Produto> response) {
+                                if (response.isSuccessful()) {
+                                    Log.d("ProdutoFragment", "Produto alterado com sucesso");
+                                    new AlertDialog.Builder(getContext())
+                                            .setTitle("Cadastro de produto")
+                                            .setMessage("Produto alterado com sucesso!")
+                                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_secundary);
+                                                    navController.navigate(R.id.nav_produto);
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Produto> call, Throwable t) {
+                                Log.d("ProdutoFragment", "Erro: " + t.getMessage());
+                            }
+                        });
+                    }
+                }else{
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Cadastro de produto")
+                            .setMessage("Preencha todos os campos!")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
             }
         });

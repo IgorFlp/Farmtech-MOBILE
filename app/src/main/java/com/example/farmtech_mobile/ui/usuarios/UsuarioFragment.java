@@ -329,71 +329,91 @@ public class UsuarioFragment extends Fragment {
         btnSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(modo[0].equals("Novo")){
-                    Log.d("UsuarioFragment", "MODO NOVO");
-                    String login = txtLoginUsuario.getText().toString();
-                    String senha = txtSenhaUsuario.getText().toString();
-                    String nome = txtNomeUsuario.getText().toString();
-                    String cargo = slcCargo.getSelectedItem().toString();
+                boolean b = txtNomeUsuario.getText() != null && !txtNomeUsuario.getText().toString().isEmpty() &&
+                        txtLoginUsuario.getText() != null && !txtLoginUsuario.getText().toString().isEmpty() &&
+                        txtSenhaUsuario.getText() != null && !txtSenhaUsuario.getText().toString().isEmpty() &&
+                        slcCargo.getSelectedItem() != null && !slcCargo.getSelectedItem().toString().isEmpty();
 
-                    Usuario usuario = new Usuario(0,login,senha,cargo,nome);
-                    Call<Usuario> novoUsuario = apiService.criarUsuario(usuario);
-                    novoUsuario.enqueue(new Callback<Usuario>() {
-                        @Override
-                        public void onResponse(Call<Usuario> call, Response<Usuario> response) {
-                            if(response.isSuccessful()){
-                                Log.d("UsuarioFragment", "Usuario criado com sucesso");
-                                new AlertDialog.Builder(getContext())
-                                        .setTitle("Cadastro de usuario")
-                                        .setMessage("Usuario criado com sucesso!")
-                                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment_content_secundary);
-                                                navController.navigate(R.id.nav_usuario);
-                                            }
-                                        })
-                                        .setIcon(android.R.drawable.ic_dialog_alert)
-                                        .show();
-                            }
-                        }
-                        @Override
-                        public void onFailure(Call<Usuario> call, Throwable t) {
-                            Log.d("UsuarioFragment", "Erro: "+t.getMessage());
-                        }
-                    });
-                } else if (modo[0].equals("Alterar")) {
-                    Log.d("UsuarioFragment", "MODO ALTERAR");
-                    String login = txtLoginUsuario.getText().toString();
-                    String senha = txtSenhaUsuario.getText().toString();
-                    String nome =  txtNomeUsuario.getText().toString();
-                    String cargo = slcCargo.getSelectedItem().toString();
-                    Integer id = (Integer) txtLoginUsuario.getTag();
+                if(b == true) {
+                    if (modo[0].equals("Novo")) {
+                        Log.d("UsuarioFragment", "MODO NOVO");
+                        String login = txtLoginUsuario.getText().toString();
+                        String senha = txtSenhaUsuario.getText().toString();
+                        String nome = txtNomeUsuario.getText().toString();
+                        String cargo = slcCargo.getSelectedItem().toString();
 
-                    Usuario usuario = new Usuario(id,login,senha,cargo,nome);
-                    Call<Usuario> alterarUsuario = apiService.atualizarUsuario(id,usuario);
-                    alterarUsuario.enqueue(new Callback<Usuario>() {
-                        @Override
-                        public void onResponse(Call<Usuario> call, Response<Usuario> response) {
-                            if(response.isSuccessful()){
-                                Log.d("UsuarioFragment", "Usuario alterado com sucesso");
-                                new AlertDialog.Builder(getContext())
-                                        .setTitle("Cadastro de usuario")
-                                        .setMessage("Usuario alterado com sucesso!")
-                                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment_content_secundary);
-                                                navController.navigate(R.id.nav_usuario);
-                                            }
-                                        })
-                                        .setIcon(android.R.drawable.ic_dialog_alert)
-                                        .show();
+                        Usuario usuario = new Usuario(0, login, senha, cargo, nome);
+                        Call<Usuario> novoUsuario = apiService.criarUsuario(usuario);
+                        novoUsuario.enqueue(new Callback<Usuario>() {
+                            @Override
+                            public void onResponse(Call<Usuario> call, Response<Usuario> response) {
+                                if (response.isSuccessful()) {
+                                    Log.d("UsuarioFragment", "Usuario criado com sucesso");
+                                    new AlertDialog.Builder(getContext())
+                                            .setTitle("Cadastro de usuario")
+                                            .setMessage("Usuario criado com sucesso!")
+                                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_secundary);
+                                                    navController.navigate(R.id.nav_usuario);
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .show();
+                                }
                             }
-                        }
-                        @Override
-                        public void onFailure(Call<Usuario> call, Throwable t) {
-                            Log.d("UsuarioFragment", "Erro: "+t.getMessage());
-                        }
-                    });
+
+                            @Override
+                            public void onFailure(Call<Usuario> call, Throwable t) {
+                                Log.d("UsuarioFragment", "Erro: " + t.getMessage());
+                            }
+                        });
+                    } else if (modo[0].equals("Alterar")) {
+                        Log.d("UsuarioFragment", "MODO ALTERAR");
+                        String login = txtLoginUsuario.getText().toString();
+                        String senha = txtSenhaUsuario.getText().toString();
+                        String nome = txtNomeUsuario.getText().toString();
+                        String cargo = slcCargo.getSelectedItem().toString();
+                        Integer id = (Integer) txtLoginUsuario.getTag();
+
+                        Usuario usuario = new Usuario(id, login, senha, cargo, nome);
+                        Call<Usuario> alterarUsuario = apiService.atualizarUsuario(id, usuario);
+                        alterarUsuario.enqueue(new Callback<Usuario>() {
+                            @Override
+                            public void onResponse(Call<Usuario> call, Response<Usuario> response) {
+                                if (response.isSuccessful()) {
+                                    Log.d("UsuarioFragment", "Usuario alterado com sucesso");
+                                    new AlertDialog.Builder(getContext())
+                                            .setTitle("Cadastro de usuario")
+                                            .setMessage("Usuario alterado com sucesso!")
+                                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_secundary);
+                                                    navController.navigate(R.id.nav_usuario);
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Usuario> call, Throwable t) {
+                                Log.d("UsuarioFragment", "Erro: " + t.getMessage());
+                            }
+                        });
+                    }
+                }else{
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Cadastro de usuario")
+                            .setMessage("Preencha todos campos corretamente!")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
             }
         });

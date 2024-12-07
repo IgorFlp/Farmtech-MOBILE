@@ -32,6 +32,9 @@ import com.example.farmtech_mobile.data.model.ClienteEndereco;
 import com.google.gson.Gson;
 
 import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -147,6 +150,29 @@ public class ClienteNovoFragment extends Fragment {
                 String ano = slcAno.getSelectedItem().toString();
                 mes = meses.get(mes);
                 String dataNasc = ano+"-"+mes+"-"+dia;
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                try {
+                    LocalDate ld = LocalDate.parse(dataNasc, formatter);
+                    Log.d("ClienteNovoFragment", "DATA: "+ ld);
+                    if(ld.toString().equals(dataNasc)){
+                        Log.d("ClienteNovoFragment","Data valida");
+                    }else{
+                        Log.d("ClienteNovoFragment","Data invalida");
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Cadastro de cliente")
+                                .setMessage("Data de nascimento invalida!")
+                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+                    }
+                } catch (DateTimeParseException e) {
+
+                }
                 Log.d("ClienteNovoFragment","Data nasc: "+dataNasc);
                 String gen = slcGenero.getSelectedItem().toString();
                 char genero;

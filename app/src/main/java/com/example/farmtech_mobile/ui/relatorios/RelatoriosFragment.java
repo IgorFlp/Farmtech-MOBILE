@@ -62,6 +62,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
@@ -304,6 +305,14 @@ public class RelatoriosFragment extends Fragment {
 
     private void relatorioVendas() {
         lblTitulo.setText("Relatório de Vendas");
+        tabelaRelatorio.removeAllViews();
+        LinearLayout layoutRelatorio = binding.layoutRelatorio;
+        for (int i = layoutRelatorio.getChildCount() - 1; i >= 0; i--) {
+            View child = layoutRelatorio.getChildAt(i);
+            if (child != tabelaRelatorio) {
+                layoutRelatorio.removeViewAt(i);
+            }
+        }
         List<Usuario> usuarios = new ArrayList<>();
         List<Cliente> clientes = new ArrayList<>();
         List<Venda> vendas = new ArrayList<>();
@@ -311,588 +320,571 @@ public class RelatoriosFragment extends Fragment {
         List<VendaProdutos> vendaProdutos = new ArrayList<>();
         // Fazer call e alimentar as listas Vendas, VendasProdutos,Produtos, Clientes, Vendas
 
-        CountDownLatch latch = new CountDownLatch(5);
 
         Call<List<Usuario>> callUsuario = apiService.getUsuarios();
         callUsuario.enqueue(new Callback<List<Usuario>>() {
             @Override
             public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     List<Usuario> u = response.body();
                     usuarios.addAll(u);
-                    Log.d("RelatoriosFragment", "Usuarios: "+ gson.toJson(usuarios));
+
+                    Call<List<Cliente>> callCliente = apiService.getClientes();
+                    callCliente.enqueue(new Callback<List<Cliente>>() {
+                        @Override
+                        public void onResponse(Call<List<Cliente>> call, Response<List<Cliente>> response) {
+                            if (response.isSuccessful()) {
+                                List<Cliente> u = response.body();
+                                clientes.addAll(u);
+                                Log.d("RelatoriosFragment", "Clientes: " + gson.toJson(clientes));
+
+                                Call<List<Venda>> callVenda = apiService.getVendas();
+                                callVenda.enqueue(new Callback<List<Venda>>() {
+                                    @Override
+                                    public void onResponse(Call<List<Venda>> call, Response<List<Venda>> response) {
+                                        if (response.isSuccessful()) {
+                                            List<Venda> u = response.body();
+                                            vendas.addAll(u);
+                                            Log.d("RelatoriosFragment", "Vendas: " + gson.toJson(vendas));
+
+                                            Call<List<VendaProdutos>> callVendaProdutos = apiService.getVendaProdutos();
+                                            callVendaProdutos.enqueue(new Callback<List<VendaProdutos>>() {
+                                                @Override
+                                                public void onResponse(Call<List<VendaProdutos>> call, Response<List<VendaProdutos>> response) {
+                                                    if (response.isSuccessful()) {
+                                                        List<VendaProdutos> u = response.body();
+                                                        vendaProdutos.addAll(u);
+                                                        Log.d("RelatoriosFragment", "VendaProdutoss: " + gson.toJson(vendaProdutos));
+
+                                                        Call<List<Produto>> callProdutos = apiService.getProdutos();
+                                                        callProdutos.enqueue(new Callback<List<Produto>>() {
+                                                            @Override
+                                                            public void onResponse(Call<List<Produto>> call, Response<List<Produto>> response) {
+                                                                if (response.isSuccessful()) {
+                                                                    List<Produto> u = response.body();
+                                                                    produtos.addAll(u);
+                                                                    Log.d("RelatoriosFragment", "Produtoss: " + gson.toJson(produtos));
+
+
+                                                                    for (Venda venda : vendas) {
+                                                                        //Criar Linear layout com  id e data do produto e dropdown pra expandir a TableView
+                                                                        LinearLayout vendaHeader1 = new LinearLayout(layoutRelatorio.getContext());
+                                                                        LinearLayout.LayoutParams vendaHeader1Param = new LinearLayout.LayoutParams(
+                                                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                LinearLayout.LayoutParams.WRAP_CONTENT
+                                                                        );
+
+                                                                        vendaHeader1.setOrientation(LinearLayout.HORIZONTAL);
+                                                                        int cor = ContextCompat.getColor(getContext(), R.color.verde_forte_claro);
+                                                                        vendaHeader1.setTag("vendaHeader1");
+                                                                        vendaHeader1.setBackgroundColor(cor);
+                                                                        vendaHeader1.setLayoutParams(vendaHeader1Param);
+
+
+                                                                        TextView vendaID = new TextView(vendaHeader1.getContext());
+                                                                        LinearLayout.LayoutParams vendaIDParam = new LinearLayout.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        vendaIDParam.leftMargin = 20;
+                                                                        vendaIDParam.gravity = Gravity.START;
+                                                                        vendaID.setLayoutParams(vendaIDParam);
+                                                                        vendaID.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        vendaID.setTextColor(Color.parseColor("#242424"));
+                                                                        vendaID.setText("Venda ID: " + String.valueOf(venda.getId()));
+                                                                        vendaHeader1.addView(vendaID);
+
+                                                                        TextView colDataVend = new TextView(vendaHeader1.getContext());
+                                                                        LinearLayout.LayoutParams colDataVendParam = new LinearLayout.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        colDataVendParam.leftMargin = dpToPx(40);
+                                                                        colDataVendParam.gravity = Gravity.START;
+                                                                        colDataVend.setLayoutParams(colDataVendParam);
+                                                                        colDataVend.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        colDataVend.setTextColor(Color.parseColor("#242424"));
+                                                                        colDataVend.setText("Data da venda: " + venda.getDtVenda());
+                                                                        vendaHeader1.addView(colDataVend);
+
+                                                                        TextView vendedor = new TextView(vendaHeader1.getContext());
+                                                                        LinearLayout.LayoutParams vendedorParam = new LinearLayout.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        vendedorParam.leftMargin = dpToPx(40);
+
+                                                                        vendedorParam.gravity = Gravity.START;
+                                                                        vendedor.setLayoutParams(vendedorParam);
+                                                                        vendedor.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        vendedor.setTextColor(Color.parseColor("#242424"));
+                                                                        for (Usuario usuario : usuarios) {
+                                                                            if (usuario.getId() == venda.getUsr_id()) {
+                                                                                vendedor.setText("Vendedor: " + usuario.getNome());
+                                                                            }
+                                                                        }
+                                                                        vendaHeader1.addView(vendedor);
+
+                                                                        LinearLayout vendaHeader2 = new LinearLayout(layoutRelatorio.getContext());
+                                                                        LinearLayout.LayoutParams vendaHeader2Param = new LinearLayout.LayoutParams(
+                                                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                LinearLayout.LayoutParams.WRAP_CONTENT
+                                                                        );
+
+                                                                        vendaHeader2.setOrientation(LinearLayout.HORIZONTAL);
+                                                                        cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
+                                                                        vendaHeader2.setTag("vendaHeader2");
+                                                                        vendaHeader2.setBackgroundColor(cor);
+                                                                        vendaHeader2.setLayoutParams(vendaHeader2Param);
+
+
+                                                                        TextView clienteNome = new TextView(vendaHeader2.getContext());
+                                                                        LinearLayout.LayoutParams clienteNomeParam = new LinearLayout.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        clienteNomeParam.leftMargin = dpToPx(10);
+                                                                        clienteNomeParam.gravity = Gravity.START;
+                                                                        clienteNome.setLayoutParams(clienteNomeParam);
+                                                                        clienteNome.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        clienteNome.setTextColor(Color.parseColor("#242424"));
+
+                                                                        TextView clienteCpf = new TextView(vendaHeader2.getContext());
+                                                                        LinearLayout.LayoutParams clienteCpfParam = new LinearLayout.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        clienteCpfParam.leftMargin = dpToPx(20);
+                                                                        clienteCpfParam.gravity = Gravity.START;
+                                                                        clienteCpf.setLayoutParams(clienteCpfParam);
+                                                                        clienteCpf.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        clienteCpf.setTextColor(Color.parseColor("#242424"));
+
+                                                                        for (Cliente cliente : clientes) {
+                                                                            if (cliente.getCpf().equals(venda.getCl_cpf())) {
+                                                                                clienteNome.setText("Cliente:  " + cliente.getNome());
+                                                                                clienteCpf.setText("CPF:  " + venda.getCl_cpf());
+                                                                                Log.d("RelatorioFragment", "Cliente nome e cpf " + cliente.getNome() + venda.getCl_cpf());
+                                                                                vendaHeader2.addView(clienteNome);
+                                                                                vendaHeader2.addView(clienteCpf);
+                                                                            }
+                                                                        }
+
+
+                                                                        LinearLayout vendaHeader3 = new LinearLayout(layoutRelatorio.getContext());
+                                                                        LinearLayout.LayoutParams vendaHeader3Param = new LinearLayout.LayoutParams(
+                                                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                LinearLayout.LayoutParams.WRAP_CONTENT
+                                                                        );
+
+                                                                        vendaHeader3.setOrientation(LinearLayout.HORIZONTAL);
+                                                                        cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
+                                                                        vendaHeader3.setTag("vendaHeader3");
+                                                                        vendaHeader3.setBackgroundColor(cor);
+                                                                        vendaHeader3.setLayoutParams(vendaHeader3Param);
+
+
+                                                                        TextView mtdPagto = new TextView(vendaHeader3.getContext());
+                                                                        LinearLayout.LayoutParams mtdPagtoParam = new LinearLayout.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        mtdPagtoParam.leftMargin = dpToPx(10);
+                                                                        mtdPagtoParam.gravity = Gravity.START;
+                                                                        mtdPagto.setLayoutParams(mtdPagtoParam);
+                                                                        mtdPagto.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        mtdPagto.setTextColor(Color.parseColor("#242424"));
+                                                                        mtdPagto.setText("Pagamento: " + venda.getMtdPagto());
+
+                                                                        TextView cupom = new TextView(vendaHeader3.getContext());
+                                                                        LinearLayout.LayoutParams cupomParam = new LinearLayout.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        cupomParam.leftMargin = dpToPx(50);
+                                                                        cupomParam.gravity = Gravity.START;
+                                                                        cupom.setLayoutParams(cupomParam);
+                                                                        cupom.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        cupom.setTextColor(Color.parseColor("#242424"));
+                                                                        cupom.setText("Cupom: " + venda.getCupom());
+
+                                                                        TextView entrega = new TextView(vendaHeader3.getContext());
+                                                                        LinearLayout.LayoutParams entregaParam = new LinearLayout.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        entregaParam.leftMargin = dpToPx(30);
+                                                                        entregaParam.gravity = Gravity.START;
+                                                                        entrega.setLayoutParams(entregaParam);
+                                                                        entrega.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        entrega.setTextColor(Color.parseColor("#242424"));
+                                                                        entrega.setText("Entrega: " + venda.getEntrega());
+
+                                                                        vendaHeader3.addView(mtdPagto);
+                                                                        vendaHeader3.addView(entrega);
+                                                                        vendaHeader3.addView(cupom);
+
+
+                                                                        LinearLayout vendaHeader4 = new LinearLayout(layoutRelatorio.getContext());
+                                                                        LinearLayout.LayoutParams vendaHeader4Param = new LinearLayout.LayoutParams(
+                                                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                LinearLayout.LayoutParams.WRAP_CONTENT
+                                                                        );
+
+                                                                        vendaHeader4.setOrientation(LinearLayout.HORIZONTAL);
+                                                                        cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
+                                                                        vendaHeader4.setTag("vendaHeader4");
+                                                                        vendaHeader4.setBackgroundColor(cor);
+                                                                        vendaHeader4.setLayoutParams(vendaHeader4Param);
+
+
+                                                                        TextView subtotal = new TextView(vendaHeader4.getContext());
+                                                                        LinearLayout.LayoutParams subtotalParam = new LinearLayout.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        subtotalParam.leftMargin = dpToPx(10);
+                                                                        subtotalParam.bottomMargin = dpToPx(20);
+                                                                        subtotalParam.gravity = Gravity.START;
+                                                                        subtotal.setLayoutParams(subtotalParam);
+                                                                        subtotal.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        subtotal.setTextColor(Color.parseColor("#242424"));
+                                                                        subtotal.setText("Subtotal: " + venda.getSubtotal());
+
+                                                                        TextView frete = new TextView(vendaHeader4.getContext());
+                                                                        LinearLayout.LayoutParams freteParam = new LinearLayout.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        freteParam.leftMargin = dpToPx(50);
+                                                                        freteParam.gravity = Gravity.START;
+                                                                        frete.setLayoutParams(freteParam);
+                                                                        frete.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        frete.setTextColor(Color.parseColor("#242424"));
+                                                                        frete.setText("Frete: " + venda.getFrete());
+
+                                                                        TextView desconto = new TextView(vendaHeader4.getContext());
+                                                                        LinearLayout.LayoutParams descontoParam = new LinearLayout.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        descontoParam.leftMargin = dpToPx(30);
+                                                                        descontoParam.gravity = Gravity.START;
+                                                                        desconto.setLayoutParams(descontoParam);
+                                                                        desconto.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        desconto.setTextColor(Color.parseColor("#242424"));
+                                                                        desconto.setText("Desconto: " + venda.getDesconto());
+
+                                                                        TextView total = new TextView(vendaHeader4.getContext());
+                                                                        LinearLayout.LayoutParams totalParam = new LinearLayout.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        totalParam.leftMargin = dpToPx(20);
+                                                                        totalParam.gravity = Gravity.START;
+                                                                        total.setLayoutParams(totalParam);
+                                                                        total.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        total.setTextColor(Color.parseColor("#242424"));
+                                                                        total.setText("Total: " + venda.getTotal());
+
+
+                                                                        vendaHeader4.addView(subtotal);
+                                                                        vendaHeader4.addView(frete);
+                                                                        vendaHeader4.addView(desconto);
+                                                                        vendaHeader4.addView(total);
+
+                                                                        LinearLayout bordaHeader = new LinearLayout(layoutRelatorio.getContext());
+                                                                        LinearLayout.LayoutParams bordaHeaderParam = new LinearLayout.LayoutParams(
+                                                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                dpToPx(10)
+                                                                        );
+                                                                        cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
+                                                                        bordaHeader.setBackgroundColor(cor);
+
+                                                                        LinearLayout bordaHeader2 = new LinearLayout(layoutRelatorio.getContext());
+                                                                        LinearLayout.LayoutParams bordaHeader2Param = new LinearLayout.LayoutParams(
+                                                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                dpToPx(5)
+                                                                        );
+                                                                        cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
+                                                                        bordaHeader2.setBackgroundColor(cor);
+
+                                                                        LinearLayout produtosHeader = new LinearLayout(layoutRelatorio.getContext());
+                                                                        LinearLayout.LayoutParams produtosHeaderParam = new LinearLayout.LayoutParams(
+                                                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                LinearLayout.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        produtosHeader.setGravity(Gravity.CENTER_HORIZONTAL);
+                                                                        cor = ContextCompat.getColor(getContext(), R.color.verde_header);
+                                                                        produtosHeader.setBackgroundColor(cor);
+
+                                                                        TextView produtosText = new TextView(produtosHeader.getContext());
+                                                                        LinearLayout.LayoutParams produtosTextParam = new LinearLayout.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        produtosText.setGravity(Gravity.CENTER_HORIZONTAL);
+                                                                        produtosText.setLayoutParams(totalParam);
+                                                                        produtosText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        produtosText.setTextColor(Color.parseColor("#242424"));
+                                                                        produtosText.setText("Produtos");
+                                                                        produtosHeader.addView(produtosText);
+
+
+                                                                        layoutRelatorio.addView(vendaHeader1);
+                                                                        layoutRelatorio.addView(bordaHeader);
+                                                                        layoutRelatorio.addView(vendaHeader2);
+                                                                        layoutRelatorio.addView(vendaHeader3);
+                                                                        layoutRelatorio.addView(vendaHeader4);
+                                                                        layoutRelatorio.addView(bordaHeader2);
+                                                                        layoutRelatorio.addView(produtosHeader);
+
+
+                                                                        //Criar TableLayout nova
+                                                                        TableLayout tabelaRelatorio = new TableLayout(layoutRelatorio.getContext());
+                                                                        TableLayout.LayoutParams tabelaRelatorioParam = new TableLayout.LayoutParams(
+                                                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                LinearLayout.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        tabelaRelatorio.setLayoutParams(tabelaRelatorioParam);
+                                                                        tabelaRelatorio.setTag("tabelaRelatorio");
+                                                                        //layoutRelatorio.addView(tabelaRelatorio);
+                                                                        Context contextTabela = tabelaRelatorio.getContext();
+
+                                                                        TableRow rowHeader = new TableRow(contextTabela);
+                                                                        Context contextRowHeader = rowHeader.getContext();
+                                                                        TableRow.LayoutParams rowHeaderParam = new TableRow.LayoutParams(
+                                                                                TableRow.LayoutParams.MATCH_PARENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+
+                                                                        rowHeader.setOrientation(LinearLayout.HORIZONTAL);
+                                                                        cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
+                                                                        rowHeader.setTag("vendaProdutoHeaderRow");
+                                                                        rowHeader.setBackgroundColor(cor);
+                                                                        rowHeader.setLayoutParams(rowHeaderParam);
+
+
+                                                                        TextView produtoIdHeader = new TextView(rowHeader.getContext());
+                                                                        TableRow.LayoutParams produtoIdHeaderParam = new TableRow.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        produtoIdHeaderParam.weight = 1f;
+                                                                        produtoIdHeaderParam.leftMargin = dpToPx(10);
+                                                                        produtoIdHeaderParam.gravity = Gravity.START;
+                                                                        produtoIdHeader.setLayoutParams(produtoIdHeaderParam);
+                                                                        produtoIdHeader.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        produtoIdHeader.setTextColor(Color.parseColor("#242424"));
+                                                                        produtoIdHeader.setText("ID");
+
+                                                                        rowHeader.addView(produtoIdHeader);
+
+                                                                        TextView produtoNomeHeader = new TextView(rowHeader.getContext());
+                                                                        TableRow.LayoutParams produtoNomeHeaderParam = new TableRow.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        produtoNomeHeaderParam.weight = 3f;
+                                                                        produtoNomeHeaderParam.leftMargin = dpToPx(20);
+                                                                        produtoNomeHeaderParam.gravity = Gravity.START;
+                                                                        produtoNomeHeader.setLayoutParams(produtoNomeHeaderParam);
+                                                                        produtoNomeHeader.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        produtoNomeHeader.setTextColor(Color.parseColor("#242424"));
+                                                                        produtoNomeHeader.setText("Nome");
+                                                                        rowHeader.addView(produtoNomeHeader);
+
+                                                                        TextView unMedidaHeader = new TextView(rowHeader.getContext());
+                                                                        TableRow.LayoutParams unMedidaHeaderParam = new TableRow.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        unMedidaHeaderParam.weight = 1f;
+                                                                        unMedidaHeaderParam.leftMargin = dpToPx(20);
+                                                                        unMedidaHeaderParam.gravity = Gravity.START;
+                                                                        unMedidaHeader.setLayoutParams(unMedidaHeaderParam);
+                                                                        unMedidaHeader.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        unMedidaHeader.setTextColor(Color.parseColor("#242424"));
+                                                                        unMedidaHeader.setText("Medida");
+                                                                        rowHeader.addView(unMedidaHeader);
+
+                                                                        TextView quantidadeHeader = new TextView(rowHeader.getContext());
+                                                                        TableRow.LayoutParams quantidadeHeaderParam = new TableRow.LayoutParams(
+                                                                                TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                TableRow.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        quantidadeHeaderParam.weight = 1f;
+                                                                        quantidadeHeaderParam.leftMargin = dpToPx(20);
+                                                                        quantidadeHeaderParam.gravity = Gravity.START;
+                                                                        quantidadeHeader.setLayoutParams(quantidadeHeaderParam);
+                                                                        quantidadeHeader.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                        quantidadeHeader.setTextColor(Color.parseColor("#242424"));
+                                                                        quantidadeHeader.setText("Quant");
+                                                                        rowHeader.addView(quantidadeHeader);
+
+                                                                        tabelaRelatorio.addView(rowHeader);
+
+                                                                        for (VendaProdutos vendaProduto : vendaProdutos) {
+                                                                            if (vendaProduto.getVen_id() == venda.getId()) {
+                                                                                TableRow row = new TableRow(contextTabela);
+                                                                                Context contextRow = row.getContext();
+                                                                                TableRow.LayoutParams rowParam = new TableRow.LayoutParams(
+                                                                                        TableRow.LayoutParams.MATCH_PARENT,
+                                                                                        TableRow.LayoutParams.WRAP_CONTENT
+                                                                                );
+
+                                                                                row.setOrientation(LinearLayout.HORIZONTAL);
+                                                                                cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
+                                                                                row.setTag("vendaProdutoRow");
+                                                                                row.setBackgroundColor(cor);
+                                                                                row.setLayoutParams(rowParam);
+
+
+                                                                                TextView produtoId = new TextView(row.getContext());
+                                                                                TableRow.LayoutParams produtoIdParam = new TableRow.LayoutParams(
+                                                                                        TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                        TableRow.LayoutParams.WRAP_CONTENT
+                                                                                );
+                                                                                produtoIdParam.weight = 1f;
+                                                                                produtoIdParam.leftMargin = dpToPx(10);
+                                                                                produtoIdParam.gravity = Gravity.START;
+                                                                                produtoId.setLayoutParams(produtoIdParam);
+                                                                                produtoId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                                produtoId.setTextColor(Color.parseColor("#242424"));
+                                                                                produtoId.setText(String.valueOf(vendaProduto.getPdt_id()));
+
+                                                                                row.addView(produtoId);
+
+                                                                                TextView produtoNome = new TextView(row.getContext());
+                                                                                TableRow.LayoutParams produtoNomeParam = new TableRow.LayoutParams(
+                                                                                        TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                        TableRow.LayoutParams.WRAP_CONTENT
+                                                                                );
+                                                                                produtoNomeParam.weight = 3f;
+                                                                                produtoNomeParam.leftMargin = dpToPx(20);
+                                                                                produtoNomeParam.gravity = Gravity.START;
+                                                                                produtoNome.setLayoutParams(produtoNomeParam);
+                                                                                produtoNome.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                                produtoNome.setTextColor(Color.parseColor("#242424"));
+
+                                                                                TextView unMedida = new TextView(row.getContext());
+                                                                                TableRow.LayoutParams unMedidaParam = new TableRow.LayoutParams(
+                                                                                        TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                        TableRow.LayoutParams.WRAP_CONTENT
+                                                                                );
+                                                                                unMedidaParam.weight = 1f;
+                                                                                unMedidaParam.leftMargin = dpToPx(20);
+                                                                                unMedidaParam.gravity = Gravity.START;
+                                                                                unMedida.setLayoutParams(unMedidaParam);
+                                                                                unMedida.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                                unMedida.setTextColor(Color.parseColor("#242424"));
+
+
+                                                                                for (Produto produto : produtos) {
+                                                                                    if (produto.getId() == vendaProduto.getPdt_id()) {
+                                                                                        produtoNome.setText(produto.getNome());
+                                                                                        unMedida.setText(produto.getUnMedida());
+                                                                                        row.addView(produtoNome);
+                                                                                        row.addView(unMedida);
+                                                                                    }
+                                                                                }
+
+                                                                                TextView quantidade = new TextView(row.getContext());
+                                                                                TableRow.LayoutParams quantidadeParam = new TableRow.LayoutParams(
+                                                                                        TableRow.LayoutParams.WRAP_CONTENT,
+                                                                                        TableRow.LayoutParams.WRAP_CONTENT
+                                                                                );
+                                                                                quantidadeParam.weight = 1f;
+                                                                                quantidadeParam.leftMargin = dpToPx(20);
+                                                                                quantidadeParam.gravity = Gravity.START;
+                                                                                quantidade.setLayoutParams(quantidadeParam);
+                                                                                quantidade.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                                                                                quantidade.setTextColor(Color.parseColor("#242424"));
+                                                                                quantidade.setText(String.valueOf(vendaProduto.getQuant()));
+
+                                                                                row.addView(quantidade);
+
+                                                                                tabelaRelatorio.addView(row);
+                                                                            }
+                                                                        }
+                                                                        LinearLayout bordaHeader3 = new LinearLayout(layoutRelatorio.getContext());
+                                                                        LinearLayout.LayoutParams bordaHeader3Param = new LinearLayout.LayoutParams(
+                                                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                LinearLayout.LayoutParams.MATCH_PARENT
+                                                                        );
+                                                                        cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
+                                                                        bordaHeader3.setBackgroundColor(cor);
+                                                                        TextView txtBorda = new TextView(bordaHeader3.getContext());
+                                                                        LinearLayout.LayoutParams txtBordaParam = new LinearLayout.LayoutParams(
+                                                                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                                                LinearLayout.LayoutParams.WRAP_CONTENT
+                                                                        );
+                                                                        txtBordaParam.weight = 1f;
+                                                                        txtBordaParam.leftMargin = dpToPx(20);
+                                                                        txtBordaParam.gravity = Gravity.START;
+                                                                        txtBorda.setLayoutParams(txtBordaParam);
+                                                                        txtBorda.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                                                                        txtBorda.setTextColor(cor);
+                                                                        txtBorda.setText("aaaaa");
+                                                                        bordaHeader3.addView(txtBorda);
+
+                                                                        layoutRelatorio.addView(tabelaRelatorio);
+                                                                        layoutRelatorio.addView(bordaHeader3);
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure(Call<List<Produto>> call, Throwable t) {
+
+                                                            }
+                                                        });
+                                                    }
+
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<List<VendaProdutos>> call, Throwable t) {
+
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<List<Venda>> call, Throwable t) {
+
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<Cliente>> call, Throwable t) {
+
+                        }
+                    });
+                    Log.d("RelatoriosFragment", "Usuarios: " + gson.toJson(usuarios));
                 }
-                latch.countDown();
             }
 
             @Override
             public void onFailure(Call<List<Usuario>> call, Throwable t) {
-                latch.countDown();
+
             }
         });
-        Call<List<Cliente>> callCliente = apiService.getClientes();
-        callCliente.enqueue(new Callback<List<Cliente>>() {
-            @Override
-            public void onResponse(Call<List<Cliente>> call, Response<List<Cliente>> response) {
-                if(response.isSuccessful()){
-                    List<Cliente> u = response.body();
-                    clientes.addAll(u);
-                    Log.d("RelatoriosFragment", "Clientes: "+ gson.toJson(clientes));
-                }
-                latch.countDown();
-            }
-
-            @Override
-            public void onFailure(Call<List<Cliente>> call, Throwable t) {
-                latch.countDown();
-            }
-        });
-        Call<List<Venda>> callVenda = apiService.getVendas();
-        callVenda.enqueue(new Callback<List<Venda>>() {
-            @Override
-            public void onResponse(Call<List<Venda>> call, Response<List<Venda>> response) {
-                if(response.isSuccessful()){
-                    List<Venda> u = response.body();
-                    vendas.addAll(u);
-                    Log.d("RelatoriosFragment", "Vendas: "+ gson.toJson(vendas));
-                }
-                latch.countDown();
-            }
-
-            @Override
-            public void onFailure(Call<List<Venda>> call, Throwable t) {
-                latch.countDown();
-            }
-        });
-        Call<List<VendaProdutos>> callVendaProdutos = apiService.getVendaProdutos();
-        callVendaProdutos.enqueue(new Callback<List<VendaProdutos>>() {
-            @Override
-            public void onResponse(Call<List<VendaProdutos>> call, Response<List<VendaProdutos>> response) {
-                if(response.isSuccessful()){
-                    List<VendaProdutos> u = response.body();
-                    vendaProdutos.addAll(u);
-                    Log.d("RelatoriosFragment", "VendaProdutoss: "+ gson.toJson(vendaProdutos));
-                }
-                latch.countDown();
-            }
-
-            @Override
-            public void onFailure(Call<List<VendaProdutos>> call, Throwable t) {
-                latch.countDown();
-            }
-        });
-        Call<List<Produto>> callProdutos = apiService.getProdutos();
-        callProdutos.enqueue(new Callback<List<Produto>>() {
-            @Override
-            public void onResponse(Call<List<Produto>> call, Response<List<Produto>> response) {
-                if(response.isSuccessful()){
-                    List<Produto> u = response.body();
-                    produtos.addAll(u);
-                    Log.d("RelatoriosFragment", "Produtoss: "+ gson.toJson(produtos));
-                }
-                latch.countDown();
-            }
-
-            @Override
-            public void onFailure(Call<List<Produto>> call, Throwable t) {
-                latch.countDown();
-            }
-        });
-
-        new Thread(() -> {
-            try {
-                latch.await(); // Aguardar até que o contador atinja zero
-                Log.d("RelatoriosFragment", "Todas as listas foram preenchidas, continuando o código...");
-
-                    //Criar Linear layout com  id e data do produto e dropdown pra expandir a TableView
-                    getActivity().runOnUiThread(() -> {
-                        if(usuarios.isEmpty() || clientes.isEmpty() || vendas.isEmpty() || produtos.isEmpty() || vendaProdutos.isEmpty()){
-
-                            relatorioVendas();
-                        }else {
-                            LinearLayout layoutRelatorio = binding.layoutRelatorio;
-                            layoutRelatorio.removeAllViews();
-                            for (Venda venda : vendas) {
-                                //Criar Linear layout com  id e data do produto e dropdown pra expandir a TableView
-                                LinearLayout vendaHeader1 = new LinearLayout(layoutRelatorio.getContext());
-                                LinearLayout.LayoutParams vendaHeader1Param = new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                );
-
-                                vendaHeader1.setOrientation(LinearLayout.HORIZONTAL);
-                                int cor = ContextCompat.getColor(getContext(), R.color.verde_forte_claro);
-                                vendaHeader1.setTag("vendaHeader1");
-                                vendaHeader1.setBackgroundColor(cor);
-                                vendaHeader1.setLayoutParams(vendaHeader1Param);
-
-
-                                TextView vendaID = new TextView(vendaHeader1.getContext());
-                                LinearLayout.LayoutParams vendaIDParam = new LinearLayout.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                vendaIDParam.leftMargin = 20;
-                                vendaIDParam.gravity = Gravity.START;
-                                vendaID.setLayoutParams(vendaIDParam);
-                                vendaID.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                vendaID.setTextColor(Color.parseColor("#242424"));
-                                vendaID.setText("Venda ID: " + String.valueOf(venda.getId()));
-                                vendaHeader1.addView(vendaID);
-
-                                TextView colDataVend = new TextView(vendaHeader1.getContext());
-                                LinearLayout.LayoutParams colDataVendParam = new LinearLayout.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                colDataVendParam.leftMargin = dpToPx(40);
-                                colDataVendParam.gravity = Gravity.START;
-                                colDataVend.setLayoutParams(colDataVendParam);
-                                colDataVend.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                colDataVend.setTextColor(Color.parseColor("#242424"));
-                                colDataVend.setText("Data da venda: " + venda.getDtVenda());
-                                vendaHeader1.addView(colDataVend);
-
-                                TextView vendedor = new TextView(vendaHeader1.getContext());
-                                LinearLayout.LayoutParams vendedorParam = new LinearLayout.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                vendedorParam.leftMargin = dpToPx(40);
-
-                                vendedorParam.gravity = Gravity.START;
-                                vendedor.setLayoutParams(vendedorParam);
-                                vendedor.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                vendedor.setTextColor(Color.parseColor("#242424"));
-                                for (Usuario usuario : usuarios) {
-                                    if (usuario.getId() == venda.getUsr_id()) {
-                                        vendedor.setText("Vendedor: " + usuario.getNome());
-                                    }
-                                }
-                                vendaHeader1.addView(vendedor);
-
-                                LinearLayout vendaHeader2 = new LinearLayout(layoutRelatorio.getContext());
-                                LinearLayout.LayoutParams vendaHeader2Param = new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                );
-
-                                vendaHeader2.setOrientation(LinearLayout.HORIZONTAL);
-                                cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
-                                vendaHeader2.setTag("vendaHeader2");
-                                vendaHeader2.setBackgroundColor(cor);
-                                vendaHeader2.setLayoutParams(vendaHeader2Param);
-
-
-                                TextView clienteNome = new TextView(vendaHeader2.getContext());
-                                LinearLayout.LayoutParams clienteNomeParam = new LinearLayout.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                clienteNomeParam.leftMargin = dpToPx(10);
-                                clienteNomeParam.gravity = Gravity.START;
-                                clienteNome.setLayoutParams(clienteNomeParam);
-                                clienteNome.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                clienteNome.setTextColor(Color.parseColor("#242424"));
-
-                                TextView clienteCpf = new TextView(vendaHeader2.getContext());
-                                LinearLayout.LayoutParams clienteCpfParam = new LinearLayout.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                clienteCpfParam.leftMargin = dpToPx(20);
-                                clienteCpfParam.gravity = Gravity.START;
-                                clienteCpf.setLayoutParams(clienteCpfParam);
-                                clienteCpf.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                clienteCpf.setTextColor(Color.parseColor("#242424"));
-
-                                for (Cliente cliente : clientes) {
-                                    if (cliente.getCpf().equals(venda.getCl_cpf())) {
-                                        clienteNome.setText("Cliente:  " + cliente.getNome());
-                                        clienteCpf.setText("CPF:  " + venda.getCl_cpf());
-                                        Log.d("RelatorioFragment", "Cliente nome e cpf " + cliente.getNome() + venda.getCl_cpf());
-                                        vendaHeader2.addView(clienteNome);
-                                        vendaHeader2.addView(clienteCpf);
-                                    }
-                                }
-
-
-                                LinearLayout vendaHeader3 = new LinearLayout(layoutRelatorio.getContext());
-                                LinearLayout.LayoutParams vendaHeader3Param = new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                );
-
-                                vendaHeader3.setOrientation(LinearLayout.HORIZONTAL);
-                                cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
-                                vendaHeader3.setTag("vendaHeader3");
-                                vendaHeader3.setBackgroundColor(cor);
-                                vendaHeader3.setLayoutParams(vendaHeader3Param);
-
-
-                                TextView mtdPagto = new TextView(vendaHeader3.getContext());
-                                LinearLayout.LayoutParams mtdPagtoParam = new LinearLayout.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                mtdPagtoParam.leftMargin = dpToPx(10);
-                                mtdPagtoParam.gravity = Gravity.START;
-                                mtdPagto.setLayoutParams(mtdPagtoParam);
-                                mtdPagto.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                mtdPagto.setTextColor(Color.parseColor("#242424"));
-                                mtdPagto.setText("Pagamento: " + venda.getMtdPagto());
-
-                                TextView cupom = new TextView(vendaHeader3.getContext());
-                                LinearLayout.LayoutParams cupomParam = new LinearLayout.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                cupomParam.leftMargin = dpToPx(50);
-                                cupomParam.gravity = Gravity.START;
-                                cupom.setLayoutParams(cupomParam);
-                                cupom.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                cupom.setTextColor(Color.parseColor("#242424"));
-                                cupom.setText("Cupom: " + venda.getCupom());
-
-                                TextView entrega = new TextView(vendaHeader3.getContext());
-                                LinearLayout.LayoutParams entregaParam = new LinearLayout.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                entregaParam.leftMargin = dpToPx(30);
-                                entregaParam.gravity = Gravity.START;
-                                entrega.setLayoutParams(entregaParam);
-                                entrega.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                entrega.setTextColor(Color.parseColor("#242424"));
-                                entrega.setText("Entrega: " + venda.getEntrega());
-
-                                vendaHeader3.addView(mtdPagto);
-                                vendaHeader3.addView(entrega);
-                                vendaHeader3.addView(cupom);
-
-
-                                LinearLayout vendaHeader4 = new LinearLayout(layoutRelatorio.getContext());
-                                LinearLayout.LayoutParams vendaHeader4Param = new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                );
-
-                                vendaHeader4.setOrientation(LinearLayout.HORIZONTAL);
-                                cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
-                                vendaHeader4.setTag("vendaHeader4");
-                                vendaHeader4.setBackgroundColor(cor);
-                                vendaHeader4.setLayoutParams(vendaHeader4Param);
-
-
-                                TextView subtotal = new TextView(vendaHeader4.getContext());
-                                LinearLayout.LayoutParams subtotalParam = new LinearLayout.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                subtotalParam.leftMargin = dpToPx(10);
-                                subtotalParam.bottomMargin = dpToPx(20);
-                                subtotalParam.gravity = Gravity.START;
-                                subtotal.setLayoutParams(subtotalParam);
-                                subtotal.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                subtotal.setTextColor(Color.parseColor("#242424"));
-                                subtotal.setText("Subtotal: " + venda.getSubtotal());
-
-                                TextView frete = new TextView(vendaHeader4.getContext());
-                                LinearLayout.LayoutParams freteParam = new LinearLayout.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                freteParam.leftMargin = dpToPx(50);
-                                freteParam.gravity = Gravity.START;
-                                frete.setLayoutParams(freteParam);
-                                frete.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                frete.setTextColor(Color.parseColor("#242424"));
-                                frete.setText("Frete: " + venda.getFrete());
-
-                                TextView desconto = new TextView(vendaHeader4.getContext());
-                                LinearLayout.LayoutParams descontoParam = new LinearLayout.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                descontoParam.leftMargin = dpToPx(30);
-                                descontoParam.gravity = Gravity.START;
-                                desconto.setLayoutParams(descontoParam);
-                                desconto.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                desconto.setTextColor(Color.parseColor("#242424"));
-                                desconto.setText("Desconto: " + venda.getDesconto());
-
-                                TextView total = new TextView(vendaHeader4.getContext());
-                                LinearLayout.LayoutParams totalParam = new LinearLayout.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                totalParam.leftMargin = dpToPx(20);
-                                totalParam.gravity = Gravity.START;
-                                total.setLayoutParams(totalParam);
-                                total.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                total.setTextColor(Color.parseColor("#242424"));
-                                total.setText("Total: " + venda.getTotal());
-
-
-                                vendaHeader4.addView(subtotal);
-                                vendaHeader4.addView(frete);
-                                vendaHeader4.addView(desconto);
-                                vendaHeader4.addView(total);
-
-                                LinearLayout bordaHeader = new LinearLayout(layoutRelatorio.getContext());
-                                LinearLayout.LayoutParams bordaHeaderParam = new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        dpToPx(10)
-                                );
-                                cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
-                                bordaHeader.setBackgroundColor(cor);
-
-                                LinearLayout bordaHeader2 = new LinearLayout(layoutRelatorio.getContext());
-                                LinearLayout.LayoutParams bordaHeader2Param = new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        dpToPx(5)
-                                );
-                                cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
-                                bordaHeader2.setBackgroundColor(cor);
-
-                                LinearLayout produtosHeader = new LinearLayout(layoutRelatorio.getContext());
-                                LinearLayout.LayoutParams produtosHeaderParam = new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                );
-                                produtosHeader.setGravity(Gravity.CENTER_HORIZONTAL);
-                                cor = ContextCompat.getColor(getContext(), R.color.verde_header);
-                                produtosHeader.setBackgroundColor(cor);
-
-                                TextView produtosText = new TextView(produtosHeader.getContext());
-                                LinearLayout.LayoutParams produtosTextParam = new LinearLayout.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                produtosText.setGravity(Gravity.CENTER_HORIZONTAL);
-                                produtosText.setLayoutParams(totalParam);
-                                produtosText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                produtosText.setTextColor(Color.parseColor("#242424"));
-                                produtosText.setText("Produtos");
-                                produtosHeader.addView(produtosText);
-
-
-                                layoutRelatorio.addView(vendaHeader1);
-                                layoutRelatorio.addView(bordaHeader);
-                                layoutRelatorio.addView(vendaHeader2);
-                                layoutRelatorio.addView(vendaHeader3);
-                                layoutRelatorio.addView(vendaHeader4);
-                                layoutRelatorio.addView(bordaHeader2);
-                                layoutRelatorio.addView(produtosHeader);
-
-
-                                //Criar TableLayout nova
-                                TableLayout tabelaRelatorio = new TableLayout(layoutRelatorio.getContext());
-                                TableLayout.LayoutParams tabelaRelatorioParam = new TableLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                );
-                                tabelaRelatorio.setLayoutParams(tabelaRelatorioParam);
-                                tabelaRelatorio.setTag("tabelaRelatorio");
-                                //layoutRelatorio.addView(tabelaRelatorio);
-                                Context contextTabela = tabelaRelatorio.getContext();
-
-                                TableRow rowHeader = new TableRow(contextTabela);
-                                Context contextRowHeader = rowHeader.getContext();
-                                TableRow.LayoutParams rowHeaderParam = new TableRow.LayoutParams(
-                                        TableRow.LayoutParams.MATCH_PARENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-
-                                rowHeader.setOrientation(LinearLayout.HORIZONTAL);
-                                cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
-                                rowHeader.setTag("vendaProdutoHeaderRow");
-                                rowHeader.setBackgroundColor(cor);
-                                rowHeader.setLayoutParams(rowHeaderParam);
-
-
-                                TextView produtoIdHeader = new TextView(rowHeader.getContext());
-                                TableRow.LayoutParams produtoIdHeaderParam = new TableRow.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                produtoIdHeaderParam.weight = 1f;
-                                produtoIdHeaderParam.leftMargin = dpToPx(10);
-                                produtoIdHeaderParam.gravity = Gravity.START;
-                                produtoIdHeader.setLayoutParams(produtoIdHeaderParam);
-                                produtoIdHeader.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                produtoIdHeader.setTextColor(Color.parseColor("#242424"));
-                                produtoIdHeader.setText("ID");
-
-                                rowHeader.addView(produtoIdHeader);
-
-                                TextView produtoNomeHeader = new TextView(rowHeader.getContext());
-                                TableRow.LayoutParams produtoNomeHeaderParam = new TableRow.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                produtoNomeHeaderParam.weight = 3f;
-                                produtoNomeHeaderParam.leftMargin = dpToPx(20);
-                                produtoNomeHeaderParam.gravity = Gravity.START;
-                                produtoNomeHeader.setLayoutParams(produtoNomeHeaderParam);
-                                produtoNomeHeader.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                produtoNomeHeader.setTextColor(Color.parseColor("#242424"));
-                                produtoNomeHeader.setText("Nome");
-                                rowHeader.addView(produtoNomeHeader);
-
-                                TextView unMedidaHeader = new TextView(rowHeader.getContext());
-                                TableRow.LayoutParams unMedidaHeaderParam = new TableRow.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                unMedidaHeaderParam.weight = 1f;
-                                unMedidaHeaderParam.leftMargin = dpToPx(20);
-                                unMedidaHeaderParam.gravity = Gravity.START;
-                                unMedidaHeader.setLayoutParams(unMedidaHeaderParam);
-                                unMedidaHeader.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                unMedidaHeader.setTextColor(Color.parseColor("#242424"));
-                                unMedidaHeader.setText("Medida");
-                                rowHeader.addView(unMedidaHeader);
-
-                                TextView quantidadeHeader = new TextView(rowHeader.getContext());
-                                TableRow.LayoutParams quantidadeHeaderParam = new TableRow.LayoutParams(
-                                        TableRow.LayoutParams.WRAP_CONTENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT
-                                );
-                                quantidadeHeaderParam.weight = 1f;
-                                quantidadeHeaderParam.leftMargin = dpToPx(20);
-                                quantidadeHeaderParam.gravity = Gravity.START;
-                                quantidadeHeader.setLayoutParams(quantidadeHeaderParam);
-                                quantidadeHeader.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                quantidadeHeader.setTextColor(Color.parseColor("#242424"));
-                                quantidadeHeader.setText("Quant");
-                                rowHeader.addView(quantidadeHeader);
-
-                                tabelaRelatorio.addView(rowHeader);
-
-                                for (VendaProdutos vendaProduto : vendaProdutos) {
-                                    if (vendaProduto.getVen_id() == venda.getId()) {
-                                        TableRow row = new TableRow(contextTabela);
-                                        Context contextRow = row.getContext();
-                                        TableRow.LayoutParams rowParam = new TableRow.LayoutParams(
-                                                TableRow.LayoutParams.MATCH_PARENT,
-                                                TableRow.LayoutParams.WRAP_CONTENT
-                                        );
-
-                                        row.setOrientation(LinearLayout.HORIZONTAL);
-                                        cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
-                                        row.setTag("vendaProdutoRow");
-                                        row.setBackgroundColor(cor);
-                                        row.setLayoutParams(rowParam);
-
-
-                                        TextView produtoId = new TextView(row.getContext());
-                                        TableRow.LayoutParams produtoIdParam = new TableRow.LayoutParams(
-                                                TableRow.LayoutParams.WRAP_CONTENT,
-                                                TableRow.LayoutParams.WRAP_CONTENT
-                                        );
-                                        produtoIdParam.weight = 1f;
-                                        produtoIdParam.leftMargin = dpToPx(10);
-                                        produtoIdParam.gravity = Gravity.START;
-                                        produtoId.setLayoutParams(produtoIdParam);
-                                        produtoId.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                        produtoId.setTextColor(Color.parseColor("#242424"));
-                                        produtoId.setText(String.valueOf(vendaProduto.getPdt_id()));
-
-                                        row.addView(produtoId);
-
-                                        TextView produtoNome = new TextView(row.getContext());
-                                        TableRow.LayoutParams produtoNomeParam = new TableRow.LayoutParams(
-                                                TableRow.LayoutParams.WRAP_CONTENT,
-                                                TableRow.LayoutParams.WRAP_CONTENT
-                                        );
-                                        produtoNomeParam.weight = 3f;
-                                        produtoNomeParam.leftMargin = dpToPx(20);
-                                        produtoNomeParam.gravity = Gravity.START;
-                                        produtoNome.setLayoutParams(produtoNomeParam);
-                                        produtoNome.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                        produtoNome.setTextColor(Color.parseColor("#242424"));
-
-                                        TextView unMedida = new TextView(row.getContext());
-                                        TableRow.LayoutParams unMedidaParam = new TableRow.LayoutParams(
-                                                TableRow.LayoutParams.WRAP_CONTENT,
-                                                TableRow.LayoutParams.WRAP_CONTENT
-                                        );
-                                        unMedidaParam.weight = 1f;
-                                        unMedidaParam.leftMargin = dpToPx(20);
-                                        unMedidaParam.gravity = Gravity.START;
-                                        unMedida.setLayoutParams(unMedidaParam);
-                                        unMedida.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                        unMedida.setTextColor(Color.parseColor("#242424"));
-
-
-                                        for (Produto produto : produtos) {
-                                            if (produto.getId() == vendaProduto.getPdt_id()) {
-                                                produtoNome.setText(produto.getNome());
-                                                unMedida.setText(produto.getUnMedida());
-                                                row.addView(produtoNome);
-                                                row.addView(unMedida);
-                                            }
-                                        }
-
-                                        TextView quantidade = new TextView(row.getContext());
-                                        TableRow.LayoutParams quantidadeParam = new TableRow.LayoutParams(
-                                                TableRow.LayoutParams.WRAP_CONTENT,
-                                                TableRow.LayoutParams.WRAP_CONTENT
-                                        );
-                                        quantidadeParam.weight = 1f;
-                                        quantidadeParam.leftMargin = dpToPx(20);
-                                        quantidadeParam.gravity = Gravity.START;
-                                        quantidade.setLayoutParams(quantidadeParam);
-                                        quantidade.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                                        quantidade.setTextColor(Color.parseColor("#242424"));
-                                        quantidade.setText(String.valueOf(vendaProduto.getQuant()));
-
-                                        row.addView(quantidade);
-
-                                        tabelaRelatorio.addView(row);
-                                    }
-                                }
-                                LinearLayout bordaHeader3 = new LinearLayout(layoutRelatorio.getContext());
-                                LinearLayout.LayoutParams bordaHeader3Param = new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        LinearLayout.LayoutParams.MATCH_PARENT
-                                );
-                                cor = ContextCompat.getColor(getContext(), R.color.verde_fundo);
-                                bordaHeader3.setBackgroundColor(cor);
-                                TextView txtBorda = new TextView(bordaHeader3.getContext());
-                                LinearLayout.LayoutParams txtBordaParam = new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                );
-                                txtBordaParam.weight = 1f;
-                                txtBordaParam.leftMargin = dpToPx(20);
-                                txtBordaParam.gravity = Gravity.START;
-                                txtBorda.setLayoutParams(txtBordaParam);
-                                txtBorda.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
-                                txtBorda.setTextColor(cor);
-                                txtBorda.setText("aaaaa");
-                                bordaHeader3.addView(txtBorda);
-
-                                layoutRelatorio.addView(tabelaRelatorio);
-                                layoutRelatorio.addView(bordaHeader3);
-                            }
-                        }
-                    });
-
-
-            } catch (InterruptedException e) {
-                Log.e("RelatoriosFragment", "Thread de verificação interrompida: " + e.getMessage());
-            }
-        }).start();
-
-
     }
 
     private void relatorioProducao() {
         lblTitulo.setText("Relatório de produções");
+        tabelaRelatorio.removeAllViews();
         LinearLayout layoutRelatorio = binding.layoutRelatorio;
-        layoutRelatorio.removeAllViews();
+        for (int i = layoutRelatorio.getChildCount() - 1; i >= 0; i--) {
+            View child = layoutRelatorio.getChildAt(i);
+            if (child != tabelaRelatorio) {
+                layoutRelatorio.removeViewAt(i);
+            }
+        }
 
         Call<List<Producao>> callProducao = apiService.getProducoes();
         callProducao.enqueue(new Callback<List<Producao>>() {
@@ -955,7 +947,16 @@ public class RelatoriosFragment extends Fragment {
                         colDataProd.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                         colDataProd.setTextColor(Color.parseColor("#242424"));
                         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                        colDataProd.setText(sdf.format(producao.getDataProd()));
+                        try {
+                            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                            Date date = inputFormat.parse(producao.getDataProd());
+                            String formattedDate = sdf.format(date);
+                            colDataProd.setText(formattedDate);
+                        } catch (ParseException e) {
+                            Log.e("RelatoriosFragment", "Erro ao converter e formatar data", e);
+                            colDataProd.setText("Data inválida");
+                        }
+                        //colDataProd.setText(sdf.format(producao.getDataProd()));
                         producaoHeader.addView(colDataProd);
 
                         layoutRelatorio.addView(producaoHeader);
@@ -1158,6 +1159,14 @@ public class RelatoriosFragment extends Fragment {
 
     private void relatorioProdutos() {
         lblTitulo.setText("Relatório de Produtos");
+        LinearLayout layoutRelatorio = binding.layoutRelatorio;
+
+        for (int i = layoutRelatorio.getChildCount() - 1; i >= 0; i--) {
+            View child = layoutRelatorio.getChildAt(i);
+            if (child != tabelaRelatorio) {
+                layoutRelatorio.removeViewAt(i);
+            }
+        }
 
         Context contextTabela = tabelaRelatorio.getContext();
         tabelaRelatorio.removeAllViews();
@@ -1309,7 +1318,13 @@ public class RelatoriosFragment extends Fragment {
 
     private void relatorioEstoque() {
         lblTitulo.setText("Relatório de estoque");
-
+        LinearLayout layoutRelatorio = binding.layoutRelatorio;
+        for (int i = layoutRelatorio.getChildCount() - 1; i >= 0; i--) {
+            View child = layoutRelatorio.getChildAt(i);
+            if (child != tabelaRelatorio) {
+                layoutRelatorio.removeViewAt(i);
+            }
+        }
         Context contextTabela = tabelaRelatorio.getContext();
         tabelaRelatorio.removeAllViews();
 
@@ -1483,9 +1498,15 @@ public class RelatoriosFragment extends Fragment {
 
     public void relatorioUsuarios() {
         lblTitulo.setText("Relatório de usuarios");
-
-        Context contextTabela = tabelaRelatorio.getContext();
         tabelaRelatorio.removeAllViews();
+        Context contextTabela = tabelaRelatorio.getContext();
+        LinearLayout layoutRelatorio = binding.layoutRelatorio;
+        for (int i = layoutRelatorio.getChildCount() - 1; i >= 0; i--) {
+            View child = layoutRelatorio.getChildAt(i);
+            if (child != tabelaRelatorio) {
+                layoutRelatorio.removeViewAt(i);
+            }
+        }
 
         // Criar Cabeçalho com weights fixos
         TableRow row = new TableRow(contextTabela);
@@ -1634,9 +1655,16 @@ public class RelatoriosFragment extends Fragment {
 
     public void relatorioClientes() {
         lblTitulo.setText("Relatório de clientes");
-
-        Context contextTabela = tabelaRelatorio.getContext();
         tabelaRelatorio.removeAllViews();
+        Context contextTabela = tabelaRelatorio.getContext();
+
+        LinearLayout layoutRelatorio = binding.layoutRelatorio;
+        for (int i = layoutRelatorio.getChildCount() - 1; i >= 0; i--) {
+            View child = layoutRelatorio.getChildAt(i);
+            if (child != tabelaRelatorio) {
+                layoutRelatorio.removeViewAt(i);
+            }
+        }
 
         // Criar Cabeçalho com weights fixos
         TableRow row = new TableRow(contextTabela);
@@ -1848,9 +1876,15 @@ public class RelatoriosFragment extends Fragment {
 
     public void relatorioFornecedores() {
         lblTitulo.setText("Relatório de fornecedores");
-
-        Context contextTabela = tabelaRelatorio.getContext();
         tabelaRelatorio.removeAllViews();
+        Context contextTabela = tabelaRelatorio.getContext();
+        LinearLayout layoutRelatorio = binding.layoutRelatorio;
+        for (int i = layoutRelatorio.getChildCount() - 1; i >= 0; i--) {
+            View child = layoutRelatorio.getChildAt(i);
+            if (child != tabelaRelatorio) {
+                layoutRelatorio.removeViewAt(i);
+            }
+        }
 
         // Criar Cabeçalho com weights fixos
         TableRow row = new TableRow(contextTabela);

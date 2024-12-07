@@ -5,9 +5,9 @@ import java.util.List;
 
 public class Producao {
     private int id;
-    private Date dataProd;
+    private String dataProd;
 
-    public Producao(Date dataProd) {
+    public Producao(String dataProd) {
         this.dataProd = dataProd;
     }
     public int getId() {
@@ -17,11 +17,11 @@ public class Producao {
         this.id = id;
     }
 
-    public Date getDataProd() {
+    public String getDataProd() {
         return dataProd;
     }
 
-    public void setDataProd(Date dataProd) {
+    public void setDataProd(String dataProd) {
         this.dataProd = dataProd;
     }
 }

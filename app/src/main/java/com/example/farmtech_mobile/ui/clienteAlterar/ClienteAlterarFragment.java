@@ -30,6 +30,9 @@ import com.example.farmtech_mobile.data.model.ClienteEndereco;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -288,6 +291,28 @@ public class ClienteAlterarFragment extends Fragment {
                 String ano = slcAno.getSelectedItem().toString();
                 mes = meses.get(mes);
                 String dataNasc = ano+"-"+mes+"-"+dia;
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                try {
+                    LocalDate ld = LocalDate.parse(dataNasc, formatter);
+                    Log.d("ClienteNovoFragment", "DATA: "+ ld);
+                    if(ld.toString().equals(dataNasc)){
+                        Log.d("ClienteNovoFragment","Data valida");
+                    }else{
+                        Log.d("ClienteNovoFragment","Data invalida");
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Cadastro de cliente")
+                                .setMessage("Data de nascimento invalida!")
+                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+                    }
+                } catch (DateTimeParseException e) {
+
+                }
                 Log.d("ClienteAlterarFragment","Data nasc: "+dataNasc);
                 String gen = slcGenero.getSelectedItem().toString();
                 char genero;
@@ -334,10 +359,11 @@ public class ClienteAlterarFragment extends Fragment {
                     String json = gson.toJson(cliente);
                     Log.d("ClienteNovoFragment","Cliente: "+json);
 
-                    Call<Cliente> call = apiService.atualizarCliente(cpf,cliente);
-                    call.enqueue(new Callback<Cliente>() {
+                    Call<Void> call = apiService.atualizarCliente(cpf,cliente);
+                    call.enqueue(new Callback<Void>() {
                         @Override
-                        public void onResponse(Call<Cliente> call, Response<Cliente> response) {
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            Log.d("ClienteAlterarFragment","Response: "+ response.code() + response.errorBody());
                             if (response.isSuccessful()) {
                                 Log.d("ClienteAlterarFragment", "Cliente Alterado com sucesso: " + response.body());
 
@@ -382,7 +408,7 @@ public class ClienteAlterarFragment extends Fragment {
                         }
 
                         @Override
-                        public void onFailure(Call<Cliente> call, Throwable t) {
+                        public void onFailure(Call<Void> call, Throwable t) {
                             Log.e("ClienteNovoFragment", "Erro: " + t.getMessage());
                         }
                     });

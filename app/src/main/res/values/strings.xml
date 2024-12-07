@@ -208,7 +208,7 @@
         <item> </item>
         <item>Masculino</item>
         <item>Feminino</item>
-        <item>Outros</item>
+        <item>Outro</item>
     </string-array>
     <string-array name="estados_spinner">
         <item>AC</item>

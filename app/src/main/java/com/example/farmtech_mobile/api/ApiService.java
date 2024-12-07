@@ -39,7 +39,7 @@ public interface ApiService {
     Call<Cliente> criarCliente(@Body Cliente cliente);
 
     @PUT("Clientes/{cpf}")
-    Call<Cliente> atualizarCliente(@Path("cpf") String cpf,@Body Cliente cliente );
+    Call<Void> atualizarCliente(@Path("cpf") String cpf,@Body Cliente cliente );
 
     @DELETE("Clientes/{cpf}")
     Call<Cliente> deleteCliente(@Path("cpf") String cpf);

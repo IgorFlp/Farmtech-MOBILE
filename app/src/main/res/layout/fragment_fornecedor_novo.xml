@@ -162,7 +162,7 @@
                     <EditText
                         android:id="@+id/txtCnpj"
                         android:layout_width="367dp"
-                        android:layout_height="39dp"
+                        android:layout_height="41dp"
                         android:layout_marginLeft="0sp"
                         android:layout_marginTop="0sp"
                         android:layout_marginBottom="10sp"
